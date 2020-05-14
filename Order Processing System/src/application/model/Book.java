@@ -15,6 +15,7 @@ public class Book {
 	private SimpleIntegerProperty quantity;
 	private SimpleIntegerProperty publicationYear;
 	private SimpleStringProperty publisherName;
+
 	
 	public Book(int ISBN, String title, double sellingPrice, String category, int quantity,
 			int publicationYear, String publisherName) {
@@ -60,7 +61,6 @@ public class Book {
 	public void setAuthors(List<SimpleStringProperty> authors) {
 		this.authors = authors;
 	}
-
 
 
 	public double getSellingPrice() {
@@ -113,6 +113,7 @@ public class Book {
 
 	public String getPublisherName() {
 		return publisherName.get();
+	
 	}
 
 
@@ -120,6 +121,7 @@ public class Book {
 	public void setPublisherName(SimpleStringProperty publisherName) {
 		this.publisherName = publisherName;
 	}
+
 
 
 }

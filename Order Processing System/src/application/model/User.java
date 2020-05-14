@@ -8,6 +8,7 @@ public class User {
 	private String firstName;
 	private String phone;
 	private String shppingAddress;
+	private boolean isManager;
 	public User(String username, String email, String password, String lastName, String firstName, String phone,
 			String shppingAddress) {
 		super();
@@ -18,6 +19,13 @@ public class User {
 		this.firstName = firstName;
 		this.phone = phone;
 		this.shppingAddress = shppingAddress;
+		this.isManager = false;
+	}
+	public boolean isManager() {
+		return isManager;
+	}
+	public void setManager(boolean isManager) {
+		this.isManager = isManager;
 	}
 	public String getUsername() {
 		return username;
@@ -31,7 +39,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
+	protected String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
