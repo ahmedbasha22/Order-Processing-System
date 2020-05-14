@@ -63,8 +63,8 @@ public class Book {
 
 
 
-	public SimpleDoubleProperty getSellingPrice() {
-		return sellingPrice;
+	public double getSellingPrice() {
+		return sellingPrice.get();
 	}
 
 
