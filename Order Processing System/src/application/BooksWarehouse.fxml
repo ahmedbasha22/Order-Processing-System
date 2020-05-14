@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="900.0" style="-fx-background-color: #34495E;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TableController">
+   <children>
+      <VBox layoutX="34.0" layoutY="86.0" prefHeight="397.0" prefWidth="832.0">
+         <children>
+            <TableView fx:id="tableView" prefHeight="337.0" prefWidth="332.0" style="-fx-background-color: #aeb6bf;">
+              <columns>
+                <TableColumn fx:id="isbn" prefWidth="75.0" text="ISBN" />
+                <TableColumn fx:id="title" prefWidth="96.79998779296875" text="Title" />
+                  <TableColumn fx:id="authors" prefWidth="130.40003967285156" text="Author(s)" />
+                  <TableColumn fx:id="publisher" minWidth="0.0" prefWidth="96.79998779296875" text="Publisher" />
+                  <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="144.0" text="Publication Year" />
+                  <TableColumn fx:id="sellingPrice" prefWidth="87.20001220703125" text="Selling Price" />
+                  <TableColumn fx:id="category" minWidth="1.60003662109375" prefWidth="103.199951171875" text="Category" />
+                  <TableColumn fx:id="quantity" prefWidth="96.0001220703125" text="Quantity" />
+              </columns>
+            </TableView>
+            <HBox prefHeight="100.0" prefWidth="832.0" spacing="5.0">
+               <children>
+                  <TextField fx:id="isbnTextField" promptText="ISBN" />
+                  <TextField fx:id="titleTextField" promptText="Title" />
+                  <TextField fx:id="authorsTextField" promptText="Authors" />
+                  <TextField fx:id="publisherTextField" promptText="Publisher" />
+                  <TextField fx:id="publicationYearTextField" promptText="Publication Year" />
+                  <TextField fx:id="sellingPriceTextField" promptText="Selling Price" />
+                  <TextField fx:id="categoryTextField" promptText="Category" />
+                  <TextField fx:id="quantityTextField" promptText="Quantity" />
+               </children>
+               <padding>
+                  <Insets right="2.0" top="5.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#newBookButtonPushed" style="-fx-background-color: #e5e7ea;" text="Add The book" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Label layoutX="355.0" layoutY="40.0" text="Books Warehouse" textFill="#e5e7ea">
+         <font>
+            <Font name="Corbel" size="27.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
