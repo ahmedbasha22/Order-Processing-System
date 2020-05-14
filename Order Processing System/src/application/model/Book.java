@@ -6,14 +6,14 @@ public class Book {
 	private int ISBN;
 	private String title;
 	private List<String> authors;
-	private int sellingPrice;
+	private double sellingPrice;
 	private String category;
 	private int quantity;
 	private int publicationYear;
-	private Publisher publisher;
+	private String publisherName;
 	
-	public Book(int ISBN, String title, List<String> authors, int sellingPrice, String category, int quantity,
-			int publicationYear, Publisher publisher) {
+	public Book(int ISBN, String title, List<String> authors, double sellingPrice, String category, int quantity,
+			int publicationYear, String publisherName) {
 		super();
 		this.ISBN = ISBN;
 		this.title = title;
@@ -22,7 +22,7 @@ public class Book {
 		this.category = category;
 		this.quantity = quantity;
 		this.publicationYear = publicationYear;
-		this.publisher = publisher;
+		this.publisherName = publisherName;
 	}
 
 	public int getISBN() {
@@ -49,11 +49,11 @@ public class Book {
 		this.authors = authors;
 	}
 
-	public int getSellingPrice() {
+	public double getSellingPrice() {
 		return sellingPrice;
 	}
 
-	public void setSellingPrice(int sellingPrice) {
+	public void setSellingPrice(double sellingPrice) {
 		this.sellingPrice = sellingPrice;
 	}
 
@@ -80,12 +80,13 @@ public class Book {
 	public void setPublicationYear(int publicationYear) {
 		this.publicationYear = publicationYear;
 	}
-
-	public Publisher getPublisher() {
-		return publisher;
+	
+	public String getPublisherName() {
+		return publisherName;
 	}
 
-	public void setPublisher(Publisher publisher) {
-		this.publisher = publisher;
+	public void setPublisherName(String publisherName) {
+		this.publisherName = publisherName;
 	}
+
 }
