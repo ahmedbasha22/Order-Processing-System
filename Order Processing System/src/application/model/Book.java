@@ -16,10 +16,11 @@ public class Book {
 	private SimpleIntegerProperty quantity;
 	private SimpleIntegerProperty publicationYear;
 	private final StringProperty publisherName;
+	private SimpleIntegerProperty minQuantity;
 
 	
 	public Book(int ISBN, String title, int publicationYear,  double sellingPrice, 
-			String category, int quantity, String publisherName, List<String> authors) {
+			String category, int quantity, String publisherName, List<String> authors, int minQ) {
 		this.ISBN = new SimpleIntegerProperty(ISBN);
 		this.title = new SimpleStringProperty(title);
 		this.sellingPrice = new SimpleDoubleProperty(sellingPrice);
@@ -27,6 +28,7 @@ public class Book {
 		this.quantity = new SimpleIntegerProperty(quantity);
 		this.publicationYear = new SimpleIntegerProperty(publicationYear);
 		this.publisherName = new SimpleStringProperty(publisherName);
+		this.minQuantity = new SimpleIntegerProperty(minQ);
 	}
 
 	public int getISBN() {
@@ -124,6 +126,15 @@ public class Book {
 			publisherName.set(value);
 		}
 
+		public int getMinQuantity() {
+			return minQuantity.get();
+		}
+
+
+
+		public void setMinQuantity(int minQ) {
+			this.minQuantity.set(minQ);
+		}
 
 
 }
