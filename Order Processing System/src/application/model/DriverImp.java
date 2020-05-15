@@ -15,14 +15,21 @@ import java.util.List;
 import java.util.Map;
 
 public class DriverImp implements Driver {
-	Connection connection;
+	private static Driver instance;
+	private Connection connection;
 
-	public DriverImp() throws SQLException {
+	public static Driver getInstance() throws SQLException {
+		if (instance == null)
+			instance = new DriverImp();
+		return instance;
+	}
+
+	private DriverImp() throws SQLException {
 		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/book_store", "admin", "1234");
 	}
 
 	@Override
-	public boolean AlreadyRegistredUsername(String username) throws SQLException {
+	public boolean alreadyRegistredUsername(String username) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement("select user_name from user where user_name = ?");
 		statement.setString(1, username);
 		ResultSet resultSet = statement.executeQuery();
@@ -33,7 +40,7 @@ public class DriverImp implements Driver {
 	}
 
 	@Override
-	public boolean AlreadyRegistredEmail(String email) throws SQLException {
+	public boolean alreadyRegistredEmail(String email) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement("select email from user where email = ?");
 		statement.setString(1, email);
 		ResultSet resultSet = statement.executeQuery();
@@ -82,7 +89,7 @@ public class DriverImp implements Driver {
 	}
 
 	@Override
-	public boolean validateUser(String username, String password) throws SQLException {
+	public boolean authenticateUser(String username, String password) throws SQLException {
 		PreparedStatement statement = connection
 				.prepareStatement("select user_name from user where user_name = ? and password = MD5(?)");
 		statement.setString(1, username);
@@ -96,7 +103,7 @@ public class DriverImp implements Driver {
 
 	@Override
 	public User modifyExistingUser(String oldUsername, String oldPassword, User newUserInfo) throws SQLException {
-		if (validateUser(oldUsername, oldPassword)) {
+		if (authenticateUser(oldUsername, oldPassword)) {
 			throw new SQLException("User doesn't exist!!");
 		}
 		if (newUserInfo.getPassword() == null)
@@ -142,12 +149,12 @@ public class DriverImp implements Driver {
 
 			PreparedStatement insertAuthor = connection.prepareStatement("insert into book_author values(?,?)");
 			insertAuthor.setInt(1, newBook.getISBN());
-			/* TODO remove the comment
-			for (String authorName : newBook.getAuthors()) {
-				insertAuthor.setString(2, authorName);
-				insertAuthor.executeUpdate();
-			}
-			*/
+			//TODO uncomment
+//			for (String authorName : newBook.getAuthors()) {
+//				insertAuthor.setString(2, authorName);
+//				insertAuthor.executeUpdate();
+//			}
+
 			insertAuthor.close();
 			connection.commit();
 			connection.setAutoCommit(true);
@@ -156,6 +163,17 @@ public class DriverImp implements Driver {
 			connection.setAutoCommit(true);
 			throw e;
 		}
+	}
+	
+	@Override
+	public boolean isPublisherExist(String publisherName) throws SQLException{
+		PreparedStatement statement = connection.prepareStatement("select name from publisher where name = ?");;
+		statement.setString(1, publisherName);
+		ResultSet resultSet = statement.executeQuery();
+		boolean result = resultSet.next();
+		resultSet.close();
+		statement.close();
+		return result;
 	}
 
 	@Override
@@ -310,8 +328,8 @@ public class DriverImp implements Driver {
 		return minQuantity;
 	}
 
-	@Override	
-	public List<Book> getAllBooks() throws SQLException{
+	@Override
+	public List<Book> getAllBooks() throws SQLException {
 		connection.setAutoCommit(false);
 		try {
 			Statement stmt = connection.createStatement();
@@ -328,7 +346,7 @@ public class DriverImp implements Driver {
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException {
 		return getBookBy("ISBN", Integer.toString(ISBN));
@@ -361,8 +379,8 @@ public class DriverImp implements Driver {
 			List<String> authorList = convertResultSetIntoAuthors(authorSet);
 			authorSet.close();
 			stmt.close();
-			bookList.add(new Book(ISBN, res.getString("Title"), res.getInt("publication_year"), res.getDouble("selling_price"),
-					res.getString("category"), res.getInt("quantity"),
+			bookList.add(new Book(ISBN, res.getString("Title"), res.getInt("publication_year"),
+					res.getDouble("selling_price"), res.getString("category"), res.getInt("quantity"),
 					res.getString("publisher_name"), authorList));
 		}
 		return bookList;

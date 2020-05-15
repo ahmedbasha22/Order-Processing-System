@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface Driver {
 
-	public boolean AlreadyRegistredUsername(String username) throws SQLException;
+	public boolean alreadyRegistredUsername(String username) throws SQLException;
 
-	public boolean AlreadyRegistredEmail(String email) throws SQLException;
+	public boolean alreadyRegistredEmail(String email) throws SQLException;
 
 	public void addNewUser(User newUser) throws SQLException;
 
 	public User getUser(String username, String password) throws SQLException;
 
-	public boolean validateUser(String username, String password) throws SQLException;
+	public boolean authenticateUser(String username, String password) throws SQLException;
 
 	public User modifyExistingUser(String oldUsername, String oldPassword, User newUserInfo) throws SQLException;
 
@@ -21,6 +21,8 @@ public interface Driver {
 
 	public void addNewBook(Book newBook, int minimumQuantity) throws SQLException;
 
+	public boolean isPublisherExist(String publisherName) throws SQLException;
+	
 	public void addNewPublisher(Publisher publisher) throws SQLException;
 
 	public Book modifyBookISBN(int oldISBN, int newISBN) throws SQLException;
