@@ -142,7 +142,7 @@ public class DriverImp implements Driver {
 
 			PreparedStatement insertAuthor = connection.prepareStatement("insert into book_author values(?,?)");
 			insertAuthor.setInt(1, newBook.getISBN());
-			/*
+			/* TODO remove the comment
 			for (String authorName : newBook.getAuthors()) {
 				insertAuthor.setString(2, authorName);
 				insertAuthor.executeUpdate();
@@ -310,6 +310,25 @@ public class DriverImp implements Driver {
 		return minQuantity;
 	}
 
+	@Override	
+	public List<Book> getAllBooks() throws SQLException{
+		connection.setAutoCommit(false);
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery("SELECT * FROM book");
+			List<Book> bookList = convertResultSetIntoBooks(res);
+			res.close();
+			stmt.close();
+			connection.commit();
+			connection.setAutoCommit(true);
+			return bookList;
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}
+	}
+	
 	@Override
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException {
 		return getBookBy("ISBN", Integer.toString(ISBN));

@@ -47,6 +47,8 @@ public interface Driver {
 
 	public int getMinimumQuantity(int ISBN) throws SQLException;
 
+	public List<Book> getAllBooks() throws SQLException;
+	
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException;
 
 	public List<Book> getBooksByTitle(String title) throws SQLException;
