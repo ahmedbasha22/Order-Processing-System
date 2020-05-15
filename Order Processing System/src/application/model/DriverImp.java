@@ -142,10 +142,12 @@ public class DriverImp implements Driver {
 
 			PreparedStatement insertAuthor = connection.prepareStatement("insert into book_author values(?,?)");
 			insertAuthor.setInt(1, newBook.getISBN());
+			/*
 			for (String authorName : newBook.getAuthors()) {
 				insertAuthor.setString(2, authorName);
 				insertAuthor.executeUpdate();
 			}
+			*/
 			insertAuthor.close();
 			connection.commit();
 			connection.setAutoCommit(true);
