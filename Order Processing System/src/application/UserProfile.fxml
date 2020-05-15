@@ -84,15 +84,20 @@
             </VBox>
             <VBox alignment="TOP_CENTER" layoutX="312.0" layoutY="95.0" prefHeight="282.0" prefWidth="205.0" spacing="11.0">
                <children>
-                  <Button fx:id="editFirstname" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editLastname" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editUsername" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editPassword" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editEmail" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editPhone" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editShippingAddress" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editFirstname" mnemonicParsing="false" onAction="#eFirstname" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editLastname" mnemonicParsing="false" onAction="#eLastname" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editUsername" mnemonicParsing="false" onAction="#eUsername" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editPassword" mnemonicParsing="false" onAction="#ePassword" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editEmail" mnemonicParsing="false" onAction="#eEmail" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editPhone" mnemonicParsing="false" onAction="#ePhone" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button fx:id="editShippingAddress" mnemonicParsing="false" onAction="#eShippingAddress" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
                </children>
             </VBox>
+            <Label fx:id="success" layoutX="157.0" layoutY="58.0" prefHeight="19.0" prefWidth="276.0" textFill="#309a12">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </right>

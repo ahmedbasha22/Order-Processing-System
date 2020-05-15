@@ -112,9 +112,8 @@ public class MainController {
 		window.setScene(scene);
 		window.show();
 			
-		
 		UserProfileController controller = loader.getController();
-		
+		controller.initData(user);
 		
 	}
 	
