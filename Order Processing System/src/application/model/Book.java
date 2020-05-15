@@ -1,5 +1,6 @@
 package application.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -29,6 +30,10 @@ public class Book {
 		this.publicationYear = new SimpleIntegerProperty(publicationYear);
 		this.publisherName = new SimpleStringProperty(publisherName);
 		this.minQuantity = new SimpleIntegerProperty(minQ);
+		this.authors = new ArrayList<SimpleStringProperty>();
+		for(String author : authors) {
+			this.authors.add(new SimpleStringProperty(author));
+		}
 	}
 
 	public int getISBN() {
@@ -54,9 +59,12 @@ public class Book {
 	}
 
 
-
-	public List<SimpleStringProperty> getAuthors() {
-		return authors;
+	public List<String> getAuthors() {
+		List<String> result = new ArrayList<String>();
+		for(SimpleStringProperty a : authors) {
+			result.add(a.get());
+		}
+		return result;
 	}
 
 

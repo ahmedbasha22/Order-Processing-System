@@ -46,6 +46,11 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                <children>
+                  <Label fx:id="successAdd" prefHeight="19.0" prefWidth="210.0" textFill="#16c72d">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
                   <Button mnemonicParsing="false" onAction="#newBookButtonPushed" style="-fx-background-color: #aeb6bf;" text="Add The book" textAlignment="CENTER" textFill="#1f3157">
                      <HBox.margin>
                         <Insets left="5.0" />
