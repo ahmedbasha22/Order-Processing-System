@@ -19,7 +19,7 @@ public interface Driver {
 
 	public void promoteUser(String userName) throws SQLException;
 
-	public void addNewBook(Book newBook, int minimumQuantity) throws SQLException;
+	public void addNewBook(Book newBook) throws SQLException;
 
 	public boolean isPublisherExist(String publisherName) throws SQLException;
 	
@@ -46,8 +46,6 @@ public interface Driver {
 	public Publisher modifyPublisher(String oldPublisherName, Publisher newPublisherInfo) throws SQLException;
 
 	public Book orderMoreQuantity(int ISBN, int addedQuantity) throws SQLException;
-
-	public int getMinimumQuantity(int ISBN) throws SQLException;
 
 	public List<Book> getAllBooks() throws SQLException;
 	

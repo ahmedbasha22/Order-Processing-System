@@ -132,7 +132,7 @@ public class DriverImp implements Driver {
 	}
 
 	@Override
-	public void addNewBook(Book newBook, int minimumQuantity) throws SQLException {
+	public void addNewBook(Book newBook) throws SQLException {
 		connection.setAutoCommit(false);
 		try {
 			PreparedStatement insertStatement = connection.prepareStatement("insert into book values(?,?,?,?,?,?,?,?)");
@@ -142,7 +142,7 @@ public class DriverImp implements Driver {
 			insertStatement.setDouble(4, newBook.getSellingPrice());
 			insertStatement.setString(5, newBook.getCategory());
 			insertStatement.setInt(6, newBook.getQuantity());
-			insertStatement.setInt(7, minimumQuantity);
+			insertStatement.setInt(7, newBook.getMinQuantity());
 			insertStatement.setString(8, newBook.getPublisherName());
 			insertStatement.executeUpdate();
 			insertStatement.close();
@@ -317,7 +317,7 @@ public class DriverImp implements Driver {
 		return getBooksByISBN(ISBN).get(0);
 	}
 
-	@Override
+	@Deprecated
 	public int getMinimumQuantity(int ISBN) throws SQLException {
 		Statement stmt = connection.createStatement();
 		ResultSet res = stmt.executeQuery("SELECT Minimum_quantity FROM book Where ISBN = " + ISBN);
