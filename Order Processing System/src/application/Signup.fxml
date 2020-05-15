@@ -40,15 +40,15 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="173.0" layoutY="402.0" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="Sign-up" textFill="WHITE" />
+            <Button layoutX="173.0" layoutY="402.0" mnemonicParsing="false" onAction="#createUser" style="-fx-background-color: #34495E;" text="Sign-up" textFill="WHITE" />
             <Hyperlink layoutX="130.0" layoutY="440.0" onAction="#goLogin" text="Already have an account?" />
-            <TextField layoutX="67.0" layoutY="115.0" prefHeight="26.0" prefWidth="258.0" promptText="Username" />
-            <PasswordField layoutX="67.0" layoutY="162.0" prefHeight="26.0" prefWidth="258.0" promptText="Password" />
-            <TextField layoutX="67.0" layoutY="208.0" prefHeight="26.0" prefWidth="113.0" promptText="First name" />
-            <TextField layoutX="211.0" layoutY="208.0" prefHeight="26.0" prefWidth="113.0" promptText="Last name" />
-            <TextField layoutX="66.0" layoutY="252.0" prefHeight="26.0" prefWidth="258.0" promptText="e-mail address" />
-            <TextField layoutX="67.0" layoutY="296.0" prefHeight="26.0" prefWidth="258.0" promptText="Phone number" />
-            <TextField layoutX="67.0" layoutY="341.0" prefHeight="26.0" prefWidth="258.0" promptText="Shipping address" />
+            <TextField fx:id="username" layoutX="67.0" layoutY="115.0" prefHeight="26.0" prefWidth="258.0" promptText="Username" />
+            <PasswordField fx:id="password" layoutX="67.0" layoutY="162.0" prefHeight="26.0" prefWidth="258.0" promptText="Password" />
+            <TextField fx:id="firstname" layoutX="67.0" layoutY="208.0" prefHeight="26.0" prefWidth="113.0" promptText="First name" />
+            <TextField fx:id="lastname" layoutX="211.0" layoutY="208.0" prefHeight="26.0" prefWidth="113.0" promptText="Last name" />
+            <TextField fx:id="email" layoutX="66.0" layoutY="252.0" prefHeight="26.0" prefWidth="258.0" promptText="e-mail address" />
+            <TextField fx:id="phone" layoutX="67.0" layoutY="296.0" prefHeight="26.0" prefWidth="258.0" promptText="Phone number" />
+            <TextField fx:id="shippingAddress" layoutX="67.0" layoutY="341.0" prefHeight="26.0" prefWidth="258.0" promptText="Shipping address" />
          </children>
       </AnchorPane>
    </right>

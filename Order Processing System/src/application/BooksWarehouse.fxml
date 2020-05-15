@@ -19,20 +19,20 @@
               <columns>
                 <TableColumn fx:id="isbn" prefWidth="75.0" text="ISBN" />
                 <TableColumn fx:id="title" prefWidth="96.79998779296875" text="Title" />
-                  <TableColumn fx:id="authors" prefWidth="130.40003967285156" text="Author(s)" />
-                  <TableColumn fx:id="publisher" minWidth="0.0" prefWidth="96.79998779296875" text="Publisher" />
-                  <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="144.0" text="Publication Year" />
-                  <TableColumn fx:id="sellingPrice" prefWidth="87.20001220703125" text="Selling Price" />
-                  <TableColumn fx:id="category" minWidth="1.60003662109375" prefWidth="103.199951171875" text="Category" />
-                  <TableColumn fx:id="quantity" prefWidth="96.0001220703125" text="Quantity" />
+                  <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="144.0" text="publicationYear" />
+                  <TableColumn fx:id="sellingPrice" prefWidth="100.7999267578125" text="Selling Price" />
+                  <TableColumn fx:id="category" prefWidth="108.00003051757812" text="Category" />
+                  <TableColumn fx:id="quantity" prefWidth="94.4000244140625" text="Quantity" />
+                  <TableColumn fx:id="publisherName" prefWidth="104.79998779296875" text="Publisher Name" />
+                  <TableColumn fx:id="authors" prefWidth="105.5999755859375" text="Author(s)" />
               </columns>
             </TableView>
             <HBox prefHeight="100.0" prefWidth="832.0" spacing="5.0">
                <children>
-                  <TextField fx:id="isbnTextField" promptText="ISBN" />
-                  <TextField fx:id="titleTextField" promptText="Title" />
-                  <TextField fx:id="authorsTextField" promptText="Authors" />
-                  <TextField fx:id="publisherTextField" promptText="Publisher" />
+                  <TextField fx:id="isbnTextField" prefHeight="26.0" prefWidth="113.0" promptText="ISBN" />
+                  <TextField fx:id="titleTextField" prefHeight="26.0" prefWidth="122.0" promptText="Title" />
+                  <TextField fx:id="authorsTextField" promptText="Publication Year" />
+                  <TextField fx:id="publisherNameTextField" promptText="Selling Price" />
                   <TextField fx:id="publicationYearTextField" promptText="Publication Year" />
                   <TextField fx:id="sellingPriceTextField" promptText="Selling Price" />
                   <TextField fx:id="categoryTextField" promptText="Category" />

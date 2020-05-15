@@ -21,7 +21,7 @@ public class TableController implements Initializable {
 	@FXML private TableColumn<Book, Integer> isbn;
 	@FXML private TableColumn<Book, String> title;
 	@FXML private TableColumn<Book, List<String>> authors;
-	@FXML private TableColumn<Book, String> publisher;
+	@FXML private TableColumn<Book, String> publisherName;
 	@FXML private TableColumn<Book, Integer> publicationYear;
 	@FXML private TableColumn<Book, Double> sellingPrice;
 	@FXML private TableColumn<Book, String> category;	
@@ -30,7 +30,7 @@ public class TableController implements Initializable {
 	@FXML private TextField isbnTextField;
 	@FXML private TextField titleTextField;
 	@FXML private TextField authorsTextField;
-	@FXML private TextField publisherTextField;
+	@FXML private TextField publisherNameTextField;
 	@FXML private TextField publicationYearTextField;
 	@FXML private TextField sellingPriceTextField;
 	@FXML private TextField categoryTextField;
@@ -43,12 +43,17 @@ public class TableController implements Initializable {
 		// TODO Auto-generated method stub
 		isbn.setCellValueFactory(new PropertyValueFactory<Book, Integer>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
-		authors.setCellValueFactory(new PropertyValueFactory<Book, List<String>>("Author(s)"));
-		publisher.setCellValueFactory(new PropertyValueFactory<Book, String>("Publisher"));
-		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, Integer>("Publication Year"));
-		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, Double>("Selling Price"));
+		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, Integer>("publicationYear"));
+		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, Double>("sellingPrice"));
 		category.setCellValueFactory(new PropertyValueFactory<Book, String>("Category"));
 		quantity.setCellValueFactory(new PropertyValueFactory<Book, Integer>("Quantity"));
+		publisherName.setCellValueFactory(new PropertyValueFactory<Book, String>("publisherName"));
+		authors.setCellValueFactory(new PropertyValueFactory<Book, List<String>>("authors"));
+		
+		
+		
+		
+		
 		
 		tableView.setItems(getBooks());
 		
@@ -56,7 +61,7 @@ public class TableController implements Initializable {
 	
 	public ObservableList<Book> getBooks(){
 		ObservableList<Book> books = FXCollections.observableArrayList();
-		books.add(new Book(1, "s", 5.0, "a", 100, 1998, "a"));
+		books.add(new Book(1, "s", 5, 10, "a", 98, "a", null));
 		return books;
 	}
 
@@ -68,15 +73,15 @@ public class TableController implements Initializable {
 		String categoryValue = categoryTextField.getText();
 		int quantityValue = Integer.parseInt(quantityTextField.getText());
 		int publicationValue = Integer.parseInt(publicationYearTextField.getText());
-		String publisherValue = publisherTextField.getText();
+		String publisherNameValue = publisherNameTextField.getText();
 		
 		
-		
+		/*
 		Book book = new Book(isbnValue, titleValue, sellingPriceValue,
 				categoryValue, quantityValue, publicationValue, publisherValue);
 		
 		tableView.getItems().add(book);
-		
+		*/
 	}
 	
 	

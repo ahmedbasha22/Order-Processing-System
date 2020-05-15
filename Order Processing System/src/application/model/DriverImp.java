@@ -342,9 +342,9 @@ public class DriverImp implements Driver {
 			List<String> authorList = convertResultSetIntoAuthors(authorSet);
 			authorSet.close();
 			stmt.close();
-			bookList.add(new Book(ISBN, res.getString("Title"), authorList, res.getDouble("selling_price"),
-					res.getString("category"), res.getInt("quantity"), res.getInt("publication_year"),
-					res.getString("publisher_name")));
+			bookList.add(new Book(ISBN, res.getString("Title"), res.getInt("publication_year"), res.getDouble("selling_price"),
+					res.getString("category"), res.getInt("quantity"),
+					res.getString("publisher_name"), authorList));
 		}
 		return bookList;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class Book {
 	private SimpleIntegerProperty ISBN;
@@ -14,11 +15,11 @@ public class Book {
 	private SimpleStringProperty category;
 	private SimpleIntegerProperty quantity;
 	private SimpleIntegerProperty publicationYear;
-	private SimpleStringProperty publisherName;
+	private final StringProperty publisherName;
 
 	
-	public Book(int ISBN, String title, double sellingPrice, String category, int quantity,
-			int publicationYear, String publisherName) {
+	public Book(int ISBN, String title, int publicationYear,  double sellingPrice, 
+			String category, int quantity, String publisherName, List<String> authors) {
 		this.ISBN = new SimpleIntegerProperty(ISBN);
 		this.title = new SimpleStringProperty(title);
 		this.sellingPrice = new SimpleDoubleProperty(sellingPrice);
@@ -34,8 +35,8 @@ public class Book {
 
 
 
-	public void setISBN(SimpleIntegerProperty iSBN) {
-		ISBN = iSBN;
+	public void setISBN(int iSBN) {
+		ISBN.set(iSBN);
 	}
 
 
@@ -46,8 +47,8 @@ public class Book {
 
 
 
-	public void setTitle(SimpleStringProperty title) {
-		this.title = title;
+	public void setTitle(String title) {
+		this.title.set(title);
 	}
 
 
@@ -69,8 +70,8 @@ public class Book {
 
 
 
-	public void setSellingPrice(SimpleDoubleProperty sellingPrice) {
-		this.sellingPrice = sellingPrice;
+	public void setSellingPrice(double sellingPrice) {
+		this.sellingPrice.set(sellingPrice);;
 	}
 
 
@@ -81,8 +82,8 @@ public class Book {
 
 
 
-	public void setCategory(SimpleStringProperty category) {
-		this.category = category;
+	public void setCategory(String category) {
+		this.category.set(category);
 	}
 
 
@@ -93,8 +94,8 @@ public class Book {
 
 
 
-	public void setQuantity(SimpleIntegerProperty quantity) {
-		this.quantity = quantity;
+	public void setQuantity(int quantity) {
+		this.quantity.set(quantity);
 	}
 
 
@@ -105,22 +106,23 @@ public class Book {
 
 
 
-	public void setPublicationYear(SimpleIntegerProperty publicationYear) {
-		this.publicationYear = publicationYear;
+	public void setPublicationYear(int publicationYear) {
+		this.publicationYear.set(publicationYear);
 	}
 
 
 
-	public String getPublisherName() {
-		return publisherName.get();
-	
-	}
+	public final StringProperty publisherNameProperty() {
+		   return publisherName;
+		}
 
+		public final String getPublisherName() {
+		   return publisherName.get();
+		}
 
-
-	public void setPublisherName(SimpleStringProperty publisherName) {
-		this.publisherName = publisherName;
-	}
+		public final void setPublisherName(String value) {
+			publisherName.set(value);
+		}
 
 
 
