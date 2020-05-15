@@ -381,7 +381,7 @@ public class DriverImp implements Driver {
 			stmt.close();
 			bookList.add(new Book(ISBN, res.getString("Title"), res.getInt("publication_year"),
 					res.getDouble("selling_price"), res.getString("category"), res.getInt("quantity"),
-					res.getString("publisher_name"), authorList));
+					res.getString("publisher_name"), authorList, res.getInt("Minimum_quantity")));
 		}
 		return bookList;
 	}
