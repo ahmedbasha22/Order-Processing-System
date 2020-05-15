@@ -65,9 +65,11 @@ public interface Driver {
 
 	public List<Book> addBookToShoppingCart(String username, int bookISBN, int quantity) throws SQLException;
 
+	public List<Book> getShoppingCart(String userName) throws SQLException;
+		
 	public List<Book> modifyBookInShoppingCart(String username, int bookISBN, int newQuantity) throws SQLException;
 
-	public List<Book> removeBookFromShppingCart(String username, int bookISBN) throws SQLException;
+	public List<Book> removeBookFromShoppingCart(String username, int bookISBN) throws SQLException;
 
 	public void clearShoppingCart(String username) throws SQLException;
 

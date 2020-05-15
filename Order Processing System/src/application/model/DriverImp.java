@@ -2,12 +2,17 @@ package application.model;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DriverImp implements Driver {
 	Connection connection;
@@ -166,6 +171,7 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set ISBN = ? where ISBN = ?");
 		statement.setInt(1, newISBN);
 		statement.setInt(2, oldISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(newISBN).get(0);
 	}
@@ -175,6 +181,7 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set title = ? where ISBN = ?");
 		statement.setString(1, newTitle);
 		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
@@ -209,6 +216,7 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set selling_price = ? where ISBN = ?");
 		statement.setDouble(1, newSellingPrice);
 		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
@@ -218,6 +226,7 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set category = ? where ISBN = ?");
 		statement.setString(1, newCategory);
 		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
@@ -227,25 +236,29 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set quantity = ? where ISBN = ?");
 		statement.setInt(1, newQuantity);
 		statement.setInt(2, ISBN);
-		statement.close();
-		return getBooksByISBN(ISBN).get(0);
-	}
-	
-	@Override
-	public Book modifyBookMinimumQuantity(int ISBN, int newMinimumQuantity) throws SQLException{
-		PreparedStatement statement = connection.prepareStatement("update book set Minimum_quantity = ? where ISBN = ?");
-		statement.setInt(1, newMinimumQuantity);
-		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
 
+	@Override
+	public Book modifyBookMinimumQuantity(int ISBN, int newMinimumQuantity) throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("update book set Minimum_quantity = ? where ISBN = ?");
+		statement.setInt(1, newMinimumQuantity);
+		statement.setInt(2, ISBN);
+		statement.executeUpdate();
+		statement.close();
+		return getBooksByISBN(ISBN).get(0);
+	}
 
 	@Override
 	public Book modifyBookPublicationYear(int ISBN, int newPublicationYear) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement("update book set publication_year = ? where ISBN = ?");
+		PreparedStatement statement = connection
+				.prepareStatement("update book set publication_year = ? where ISBN = ?");
 		statement.setInt(1, newPublicationYear);
 		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
@@ -255,6 +268,7 @@ public class DriverImp implements Driver {
 		PreparedStatement statement = connection.prepareStatement("update book set publisher_name = ? where ISBN = ?");
 		statement.setString(1, newPublisherName);
 		statement.setInt(2, ISBN);
+		statement.executeUpdate();
 		statement.close();
 		return getBooksByISBN(ISBN).get(0);
 	}
@@ -274,116 +288,282 @@ public class DriverImp implements Driver {
 
 	@Override
 	public Book orderMoreQuantity(int ISBN, int addedQuantity) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement statement = connection
+				.prepareStatement("update book set quantity = quantity + ? where ISBN = ?");
+		statement.setInt(1, addedQuantity);
+		statement.setInt(2, ISBN);
+		statement.executeUpdate();
+		statement.close();
+		return getBooksByISBN(ISBN).get(0);
 	}
 
 	@Override
 	public int getMinimumQuantity(int ISBN) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt.executeQuery("SELECT Minimum_quantity FROM book Where ISBN = " + ISBN);
+		res.next();
+		int minQuantity = res.getInt("Minimum_quantity");
+		res.close();
+		stmt.close();
+		return minQuantity;
 	}
 
 	@Override
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("ISBN", Integer.toString(ISBN));
+	}
+
+	private List<Book> getBookBy(String attribute, String value) throws SQLException {
+		connection.setAutoCommit(false);
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery("SELECT * FROM book Where " + attribute + " LIKE " + "'" + value + "%'");
+			List<Book> bookList = convertResultSetIntoBooks(res);
+			res.close();
+			stmt.close();
+			connection.commit();
+			connection.setAutoCommit(true);
+			return bookList;
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}
+	}
+
+	private List<Book> convertResultSetIntoBooks(ResultSet res) throws SQLException {
+		List<Book> bookList = new ArrayList<>();
+		while (res.next()) {
+			int ISBN = res.getInt("ISBN");
+			Statement stmt = connection.createStatement();
+			ResultSet authorSet = stmt.executeQuery("SELECT author_name FROM book_author where ISBN = " + ISBN);
+			List<String> authorList = convertResultSetIntoAuthors(authorSet);
+			authorSet.close();
+			stmt.close();
+			bookList.add(new Book(ISBN, res.getString("Title"), authorList, res.getDouble("selling_price"),
+					res.getString("category"), res.getInt("quantity"), res.getInt("publication_year"),
+					res.getString("publisher_name")));
+		}
+		return bookList;
+	}
+
+	private List<String> convertResultSetIntoAuthors(ResultSet res) throws SQLException {
+		List<String> authorList = new ArrayList<>();
+		while (res.next()) {
+			authorList.add(res.getString("author_name"));
+		}
+		return authorList;
 	}
 
 	@Override
 	public List<Book> getBooksByTitle(String title) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("Title", title);
 	}
 
 	@Override
 	public List<Book> getBooksByAuthor(String author) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt
+				.executeQuery("SELECT distinct ISBN FROM book_author where author_name LIKE " + "'" + author + "%'");
+		List<Book> bookList = new ArrayList<>();
+		while (res.next()) {
+			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+		}
+		res.close();
+		stmt.close();
+		return bookList;
 	}
 
 	@Override
 	public List<Book> getBooksBySellingPrice(double sellingPrice) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("selling_price", Double.toString(sellingPrice));
 	}
 
 	@Override
 	public List<Book> getBooksByCatgory(String category) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("category", category);
 	}
 
 	@Override
 	public List<Book> getBooksByPublicationYear(int publicationYear) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("Publication_year", Integer.toString(publicationYear));
 	}
 
 	@Override
 	public List<Book> getBooksByPublisherName(String publisherName) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getBookBy("publisher_name", publisherName);
 	}
 
 	@Override
 	public Publisher getPublisher(String publisherName) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt.executeQuery("SELECT * FROM publisher Where name = " + "'" + publisherName + "'");
+		res.next();
+		Publisher publisher = new Publisher(res.getString(1), res.getString(2), res.getString(3));
+		res.close();
+		stmt.close();
+		return publisher;
 	}
 
 	@Override
 	public List<Book> addBookToShoppingCart(String username, int bookISBN, int quantity) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement insertStatement = connection.prepareStatement("insert into shopping_cart values(?,?,?)");
+		insertStatement.setInt(1, bookISBN);
+		insertStatement.setString(2, username);
+		insertStatement.setInt(3, quantity);
+		insertStatement.executeUpdate();
+		insertStatement.close();
+		return getShoppingCart(username);
+	}
+
+	@Override
+	public List<Book> getShoppingCart(String userName) throws SQLException {
+		Map<Integer, Integer> quantityMap = new HashMap<>();
+		List<Book> bookList = new ArrayList<>();
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt
+				.executeQuery("SELECT ISBN, quantity FROM shopping_cart Where user_name = " + "'" + userName + "'");
+		while (res.next()) {
+			quantityMap.put(res.getInt("ISBN"), res.getInt("quantity"));
+			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+		}
+		res.close();
+		stmt.close();
+		for (Book book : bookList) {
+			book.setQuantity(quantityMap.get(book.getISBN()));
+		}
+		return bookList;
 	}
 
 	@Override
 	public List<Book> modifyBookInShoppingCart(String username, int bookISBN, int newQuantity) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement stmt = connection
+				.prepareStatement("update shopping_cart set quantity = ? where ISBN = ? and user_name = ?");
+		stmt.setInt(1, newQuantity);
+		stmt.setInt(2, bookISBN);
+		stmt.setString(3, username);
+		stmt.executeUpdate();
+		stmt.close();
+		return getShoppingCart(username);
 	}
 
 	@Override
-	public List<Book> removeBookFromShppingCart(String username, int bookISBN) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Book> removeBookFromShoppingCart(String username, int bookISBN) throws SQLException {
+		PreparedStatement stmt = connection
+				.prepareStatement("DELETE FROM shopping_cart where ISBN = ? and user_name = ?");
+		stmt.setInt(1, bookISBN);
+		stmt.setString(2, username);
+		stmt.executeUpdate();
+		stmt.close();
+		return getShoppingCart(username);
 	}
 
 	@Override
 	public void clearShoppingCart(String username) throws SQLException {
-		// TODO Auto-generated method stub
-
+		PreparedStatement stmt = connection.prepareStatement("DELETE FROM shopping_cart where user_name = ?");
+		stmt.setString(1, username);
+		stmt.executeUpdate();
+		stmt.close();
 	}
 
 	@Override
 	public void checkoutShoppingCart(String username) throws SQLException {
-		// TODO Auto-generated method stub
+		connection.setAutoCommit(false);
+		try {
+			List<Book> shoppingCart = getShoppingCart(username);
+			PreparedStatement stmt = connection.prepareStatement("Insert Into sale values(?,?,?,?)");
+			Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+			stmt.setString(2, username);
+			stmt.setDate(4, currentDate);
+			for (Book book : shoppingCart) {
+				stmt.setInt(1, book.getISBN());
+				stmt.setInt(3, book.getQuantity());
+				stmt.executeUpdate();
+			}
+			stmt.close();
+			clearShoppingCart(username);
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}
+	}
 
+	private void deleteSalesBefore3Months() throws SQLException {
+		PreparedStatement stmt = connection
+				.prepareStatement("DELETE FROM sale WHERE Date < DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
+		stmt.executeUpdate();
+		stmt.close();
 	}
 
 	@Override
 	public List<Book> getBookSalesPreviousMonth() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		deleteSalesBefore3Months();
+		return getBooksfromSales(
+				"SELECT ISBN, sum(quantity) FROM sale Where Date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) GROUP BY ISBN");
+	}
+
+	private List<Book> getBooksfromSales(String sql) throws SQLException {
+		Map<Integer, Integer> quantityMap = new HashMap<>();
+		List<Book> bookList = new ArrayList<>();
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt.executeQuery(sql);
+		while (res.next()) {
+			quantityMap.put(res.getInt("ISBN"), res.getInt("sum(quantity)"));
+			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+		}
+		res.close();
+		stmt.close();
+		for (Book book : bookList) {
+			book.setQuantity(quantityMap.get(book.getISBN()));
+		}
+		return bookList;
 	}
 
 	@Override
 	public List<User> getTop5Users() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		deleteSalesBefore3Months();
+		List<User> userList = new ArrayList<>();
+		Statement stmt = connection.createStatement();
+		ResultSet nameResultSet = stmt.executeQuery(
+				"SELECT username, sum(quantity) FROM sale GROUP BY username ORDER BY sum(quantity) DESC LIMIT 5");
+		PreparedStatement statement = connection.prepareStatement("select * from user where user_name = ?");
+		while (nameResultSet.next()) {
+			statement.setString(1, nameResultSet.getString("username"));
+			ResultSet userResultSet = statement.executeQuery();
+			userResultSet.next();
+			User user = new User(userResultSet.getString(1), userResultSet.getString(2), null,
+					userResultSet.getString(4), userResultSet.getString(5), userResultSet.getString(6),
+					userResultSet.getString(7));
+			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
+			statement2.setString(1, nameResultSet.getString("username"));
+			ResultSet resultSet2 = statement2.executeQuery();
+			user.setManager(userResultSet.next());
+			resultSet2.close();
+			statement2.close();
+			userResultSet.close();
+			userList.add(user);
+		}
+		statement.close();
+		nameResultSet.close();
+		stmt.close();
+		return userList;
 	}
 
 	@Override
 	public List<Book> getUserPurchases(String username) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		deleteSalesBefore3Months();
+		return getBooksfromSales(
+				"SELECT ISBN, sum(quantity) FROM sale Where user_name = " + "'" + username + "' GROUP BY ISBN");
 	}
 
 	@Override
 	public List<Book> getTop10SoldBooks() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		deleteSalesBefore3Months();
+		return getBooksfromSales(
+				"SELECT ISBN, sum(quantity) FROM sale GROUP BY ISBN ORDER BY sum(quantity) DESC LIMIT 10");
 	}
 
 	@Override
