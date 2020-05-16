@@ -136,7 +136,7 @@ public class DriverImp implements Driver {
 		connection.setAutoCommit(false);
 		try {
 			PreparedStatement insertStatement = connection.prepareStatement("insert into book values(?,?,?,?,?,?,?,?)");
-			insertStatement.setInt(1, newBook.getISBN());
+			insertStatement.setInt(1, Integer.parseInt(newBook.getISBN()));
 			insertStatement.setString(2, newBook.getTitle());
 			insertStatement.setInt(3, newBook.getPublicationYear());
 			insertStatement.setDouble(4, newBook.getSellingPrice());
@@ -148,7 +148,7 @@ public class DriverImp implements Driver {
 			insertStatement.close();
 
 			PreparedStatement insertAuthor = connection.prepareStatement("insert into book_author values(?,?)");
-			insertAuthor.setInt(1, newBook.getISBN());
+			insertAuthor.setInt(1, Integer.parseInt(newBook.getISBN()));
 			//TODO uncomment
 //			for (String authorName : newBook.getAuthors()) {
 //				insertAuthor.setString(2, authorName);
@@ -379,7 +379,7 @@ public class DriverImp implements Driver {
 			List<String> authorList = convertResultSetIntoAuthors(authorSet);
 			authorSet.close();
 			stmt.close();
-			bookList.add(new Book(ISBN, res.getString("Title"), res.getInt("publication_year"),
+			bookList.add(new Book(Integer.toString(ISBN), res.getString("Title"), res.getInt("publication_year"),
 					res.getDouble("selling_price"), res.getString("category"), res.getInt("quantity"),
 					res.getString("publisher_name"), authorList, res.getInt("Minimum_quantity")));
 		}
@@ -515,7 +515,7 @@ public class DriverImp implements Driver {
 			stmt.setString(2, username);
 			stmt.setDate(4, currentDate);
 			for (Book book : shoppingCart) {
-				stmt.setInt(1, book.getISBN());
+				stmt.setInt(1, Integer.parseInt(book.getISBN()));
 				stmt.setInt(3, book.getQuantity());
 				stmt.executeUpdate();
 			}

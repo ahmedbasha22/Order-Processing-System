@@ -17,7 +17,7 @@
          <children>
             <TableView fx:id="tableView" prefHeight="337.0" prefWidth="944.0" style="-fx-background-color: #e5e7ea;">
               <columns>
-                <TableColumn fx:id="isbn" prefWidth="75.0" text="ISBN" />
+                <TableColumn fx:id="isbn" onEditCommit="#editISBN" prefWidth="75.0" text="ISBN" />
                 <TableColumn fx:id="title" prefWidth="96.79998779296875" text="Title" />
                   <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="99.20001220703125" text="Publication Year" />
                   <TableColumn fx:id="sellingPrice" prefWidth="113.5999755859375" text="Selling Price" />

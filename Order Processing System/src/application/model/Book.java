@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Book {
-	private SimpleIntegerProperty ISBN;
+	private SimpleStringProperty ISBN;
 	private SimpleStringProperty title;
 	private List<SimpleStringProperty> authors;
 	private SimpleDoubleProperty sellingPrice;
@@ -20,9 +20,9 @@ public class Book {
 	private SimpleIntegerProperty minQuantity;
 
 	
-	public Book(int ISBN, String title, int publicationYear,  double sellingPrice, 
+	public Book(String ISBN, String title, int publicationYear,  double sellingPrice, 
 			String category, int quantity, String publisherName, List<String> authors, int minQ) {
-		this.ISBN = new SimpleIntegerProperty(ISBN);
+		this.ISBN = new SimpleStringProperty(ISBN);
 		this.title = new SimpleStringProperty(title);
 		this.sellingPrice = new SimpleDoubleProperty(sellingPrice);
 		this.category = new SimpleStringProperty(category);
@@ -36,13 +36,13 @@ public class Book {
 		}
 	}
 
-	public int getISBN() {
+	public String getISBN() {
 		return ISBN.get();
 	}
 
 
 
-	public void setISBN(int iSBN) {
+	public void setISBN(String iSBN) {
 		ISBN.set(iSBN);
 	}
 

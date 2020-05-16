@@ -17,9 +17,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class TableController implements Initializable {
 	
@@ -28,7 +30,7 @@ public class TableController implements Initializable {
 	@FXML private Label successAdd;
 	
 	@FXML private TableView<Book> tableView;
-	@FXML private TableColumn<Book, Integer> isbn;
+	@FXML private TableColumn<Book, String> isbn;
 	@FXML private TableColumn<Book, String> title;
 	@FXML private TableColumn<Book, List<String>> authors;
 	@FXML private TableColumn<Book, String> publisherName;
@@ -60,7 +62,7 @@ public class TableController implements Initializable {
 			e1.printStackTrace();
 		}
 		
-		isbn.setCellValueFactory(new PropertyValueFactory<Book, Integer>("ISBN"));
+		isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
 		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, Integer>("publicationYear"));
 		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, Double>("sellingPrice"));
@@ -76,6 +78,8 @@ public class TableController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		tableView.setEditable(true);
+		isbn.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
 	public ObservableList<Book> getBooks() throws SQLException{
@@ -87,7 +91,7 @@ public class TableController implements Initializable {
 
 	
 	public void newBookButtonPushed() throws SQLException {
-		int isbnValue = Integer.parseInt(isbnTextField.getText());
+		String isbnValue = isbnTextField.getText();
 		String titleValue = titleTextField.getText();
 		double sellingPriceValue = Double.parseDouble(sellingPriceTextField.getText());
 		String categoryValue = categoryTextField.getText();
@@ -108,6 +112,14 @@ public class TableController implements Initializable {
 		
 	}
 	
+	public void editISBN(CellEditEvent editedCell) {
+		String newISBN =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		
+		//driver.modifyBookISBN(InteeditedCell.getOldValue(), newISBN);
+		newBook.setISBN(newISBN);
+	}
 	
 	
 	
