@@ -149,12 +149,10 @@ public class DriverImp implements Driver {
 
 			PreparedStatement insertAuthor = connection.prepareStatement("insert into book_author values(?,?)");
 			insertAuthor.setInt(1, Integer.parseInt(newBook.getISBN()));
-			//TODO uncomment
-//			for (String authorName : newBook.getAuthors()) {
-//				insertAuthor.setString(2, authorName);
-//				insertAuthor.executeUpdate();
-//			}
-
+			for (String authorName : newBook.getAuthors()) {
+				insertAuthor.setString(2, authorName);
+				insertAuthor.executeUpdate();
+			}
 			insertAuthor.close();
 			connection.commit();
 			connection.setAutoCommit(true);
@@ -447,24 +445,37 @@ public class DriverImp implements Driver {
 
 	@Override
 	public List<Book> addBookToShoppingCart(String username, int bookISBN, int quantity) throws SQLException {
-		PreparedStatement insertStatement = connection.prepareStatement("insert into shopping_cart values(?,?,?)");
-		insertStatement.setInt(1, bookISBN);
-		insertStatement.setString(2, username);
-		insertStatement.setInt(3, quantity);
-		insertStatement.executeUpdate();
-		insertStatement.close();
-		return getShoppingCart(username);
+		List<Book> cart;
+		PreparedStatement stmt = connection
+				.prepareStatement("SELECT quantity FROM shopping_cart where ISBN = ? and user_name = ?");
+		stmt.setInt(1, bookISBN);
+		stmt.setString(2, username);
+		ResultSet res = stmt.executeQuery();
+		if(res.next()) {
+			cart = modifyBookInShoppingCart(username, bookISBN, res.getInt("quantity") + quantity);
+		}else {
+			PreparedStatement insertStatement = connection.prepareStatement("insert into shopping_cart values(?,?,?)");
+			insertStatement.setInt(1, bookISBN);
+			insertStatement.setString(2, username);
+			insertStatement.setInt(3, quantity);
+			insertStatement.executeUpdate();
+			insertStatement.close();		
+			cart = getShoppingCart(username);	
+		}
+		res.close();
+		stmt.close();
+		return cart;
 	}
 
 	@Override
 	public List<Book> getShoppingCart(String userName) throws SQLException {
-		Map<Integer, Integer> quantityMap = new HashMap<>();
+		Map<String, Integer> quantityMap = new HashMap<>();
 		List<Book> bookList = new ArrayList<>();
 		Statement stmt = connection.createStatement();
 		ResultSet res = stmt
 				.executeQuery("SELECT ISBN, quantity FROM shopping_cart Where user_name = " + "'" + userName + "'");
 		while (res.next()) {
-			quantityMap.put(res.getInt("ISBN"), res.getInt("quantity"));
+			quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("quantity"));
 			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
 		}
 		res.close();
@@ -546,12 +557,12 @@ public class DriverImp implements Driver {
 	}
 
 	private List<Book> getBooksfromSales(String sql) throws SQLException {
-		Map<Integer, Integer> quantityMap = new HashMap<>();
+		Map<String, Integer> quantityMap = new HashMap<>();
 		List<Book> bookList = new ArrayList<>();
 		Statement stmt = connection.createStatement();
 		ResultSet res = stmt.executeQuery(sql);
 		while (res.next()) {
-			quantityMap.put(res.getInt("ISBN"), res.getInt("sum(quantity)"));
+			quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("sum(quantity)"));
 			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
 		}
 		res.close();
