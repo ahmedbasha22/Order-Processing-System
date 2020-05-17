@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import application.model.Book;
 import application.model.DriverImp;
+import application.model.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +27,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 public class ShopAreaController implements Initializable {
 	
 	private DriverImp driver;
-	
+	private User user;
 	
 	@FXML private Label successAdd;
 	@FXML private Label successAdd1;
@@ -58,6 +59,7 @@ public class ShopAreaController implements Initializable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		user = new User("ahmed", "aabasha@gmail.com", "011", "Ashraf", "Ahmed", "011", "a");
 		
 		isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
@@ -99,6 +101,7 @@ public class ShopAreaController implements Initializable {
 				}
 				else if ((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) == Integer.parseInt(sb.getMinQuantity())){
 					selectedBooks.add(sb);
+					driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
 					successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!, No more of this book!");
 					successAdd.setText("");
 					printed = true;
@@ -109,7 +112,7 @@ public class ShopAreaController implements Initializable {
 			}
 		}
 		if(found) {
-			successAdd.setText("- There is not available quantity for this book!");
+			successAdd.setText("There is not available quantity for this book!");
 			successAdd1.setText("");
 		}
 		else if(!printed) {
@@ -170,6 +173,11 @@ public class ShopAreaController implements Initializable {
 		}
 		tableView.setItems(newBooks);
 	}
+	
+	public void viewCart(ActionEvent event) {
+		
+	}
+	
 }
 	
 	

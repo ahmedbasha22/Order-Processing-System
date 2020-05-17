@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import application.model.Book;
 import application.model.DriverImp;
+import application.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +21,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class CartController implements Initializable {
 	
 	private DriverImp driver;
+	
+	private User user;
 	
 	@FXML private Label successAdd;
 	
@@ -52,6 +55,8 @@ public class CartController implements Initializable {
 			e1.printStackTrace();
 		}
 		
+		user = new User("ahmed", "aabasha@gmail.com", "011", "Ashraf", "Ahmed", "011", "a");
+		
 		isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
 		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, String>("publicationYear"));
@@ -71,7 +76,7 @@ public class CartController implements Initializable {
 	
 	public ObservableList<Book> getBooks() throws SQLException{
 		ObservableList<Book> books = FXCollections.observableArrayList();
-		List<Book> b = driver.getAllBooks();
+		List<Book> b = driver.getShoppingCart("ahmed");
 		books.addAll(b);
 		return books;
 	}
