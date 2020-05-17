@@ -1,34 +1,32 @@
 package application.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validator {
 
-	public List<String> newUser(User user) {
-		List<String> errors = new ArrayList<String>();
+	public String newUser(User user) {
+		String errors = "";
 		if (user.getUsername().length() < 8) {
-			errors.add("Username length is too short, it must be more than 8 characters");
+			errors += "Username length is too short, it must be more than 8 characters\n";
 		}
 		if (user.getPassword().length() < 8) {
-			errors.add("Password length is too short, it must be more than 8 characters");
+			errors  += "Password length is too short, it must be more than 8 characters\n";
 		}
 		if (user.getFirstName().length() == 0) {
-			errors.add("First name cannot be empty");
+			errors += "First name cannot be empty\n";
 		}
 		if (user.getLastName().length() == 0) {
-			errors.add("Last name cannot be empty");
+			errors += "Last name cannot be empty\n";
 		}
 		if(! isValidEmail(user.getEmail())) {
-			errors.add("Email is not valid");
+			errors += "Email is not valid\n";
 		}
 		if(user.getPhone().length() < 11) {
-			errors.add("Password length is too short, it must be at least 11 digits");
+			errors += "Password length is too short, it must be at least 11 digits\n";
 		}		
 		if(user.getShppingAddress().length() == 0) {
-			errors.add("Shipping address cannot be empty");
+			errors += "Shipping address cannot be empty\n";
 		}		
 		return errors;
 	}

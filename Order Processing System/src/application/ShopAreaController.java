@@ -1,21 +1,24 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import application.model.Book;
 import application.model.DriverImp;
 import application.model.User;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 
 public class ShopAreaController implements Initializable {
 	
@@ -49,6 +53,11 @@ public class ShopAreaController implements Initializable {
 	@FXML private TextField searchCategory;
 	@FXML private TextField searchAuthors;
 	
+	@FXML private Hyperlink viewP;
+	
+	public void initData(User user) {
+		this.user = user;
+	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -59,7 +68,6 @@ public class ShopAreaController implements Initializable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		user = new User("ahmed", "aabasha@gmail.com", "011", "Ashraf", "Ahmed", "011", "a");
 		
 		isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
@@ -91,7 +99,6 @@ public class ShopAreaController implements Initializable {
 		ObservableList<Book> books = tableView.getItems();
 		ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
 		boolean found = false;
-		boolean printed = false;
 		String a = "";
 		for(Book sb : books) {
 			if(sb.getSelected().isSelected()) {
@@ -101,23 +108,33 @@ public class ShopAreaController implements Initializable {
 				}
 				else if ((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) == Integer.parseInt(sb.getMinQuantity())){
 					selectedBooks.add(sb);
-					driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
-					successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!, No more of this book!");
-					successAdd.setText("");
-					printed = true;
+					try {
+						driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
+						successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!, No more of this book!");
+						successAdd.setText("");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						successAdd1.setText("");
+						successAdd.setText(e1.getMessage());
+					}
 				}
 				else {
-					sb.setQuantity(Integer.toString((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ()))));
+					try {
+						driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
+						sb.setQuantity(Integer.toString((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ()))));
+						successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!");
+						successAdd.setText("");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						successAdd1.setText("");
+						successAdd.setText(e1.getMessage());
+					}
 				}
 			}
 		}
 		if(found) {
 			successAdd.setText("There is not available quantity for this book!");
 			successAdd1.setText("");
-		}
-		else if(!printed) {
-			successAdd.setText("");
-			successAdd1.setText("Added " + a + " to the cart successfully!");
 		}
 		books.removeAll(selectedBooks);
 		tableView.setItems(books);
@@ -174,8 +191,34 @@ public class ShopAreaController implements Initializable {
 		tableView.setItems(newBooks);
 	}
 	
-	public void viewCart(ActionEvent event) {
+	public void viewCart(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("Cart.fxml"));
+		Parent root = loader.load();
 		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+			
+		CartController controller = loader.getController();
+		controller.initData(user);
+	}
+	
+	public void viewProfile(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("UserProfile.fxml"));
+		Parent root = loader.load();
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+			
+		UserProfileController controller = loader.getController();
+		controller.initData(user);
 	}
 	
 }

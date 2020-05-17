@@ -2,15 +2,19 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import application.model.Authenticator;
 import application.model.Book;
+import application.model.DriverImp;
 import application.model.Publisher;
 import application.model.User;
+import application.model.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,17 +25,30 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class MainController {
 	
-	User user;
+	private User user;
+	private DriverImp driver;
+	private Validator validator = new Validator();
+	private Authenticator authenticator;
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@FXML private TextField username;
 	@FXML private PasswordField password;
 	@FXML private TextField firstname;
@@ -39,6 +56,12 @@ public class MainController {
 	@FXML private TextField email;
 	@FXML private TextField phone;
 	@FXML private TextField shippingAddress;
+	
+	@FXML private Label errorsArea;
+	@FXML private TextField lusername;
+	@FXML private PasswordField lpassword;
+	
+	@FXML private TextArea errorsTextArea;
 	
 	
 	
@@ -100,22 +123,97 @@ public class MainController {
 		String phoneVal = phone.getText();
 		String shippingAddressVal = shippingAddress.getText();
 		
-		user = new User(usernameVal, emailVal, passwordVal, lastnameVal, firstnameVal, phoneVal, shippingAddressVal);
-		
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("UserProfile.fxml"));
-		Parent root = loader.load();
-		
-		Scene scene = new Scene(root,775,513);
-		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
-		window.setScene(scene);
-		window.show();
+		String errors = validator.newUser(user);
+		if(errors.equals("")) {
+			user = new User(usernameVal, emailVal, passwordVal, lastnameVal, firstnameVal, phoneVal, shippingAddressVal);
 			
-		UserProfileController controller = loader.getController();
-		controller.initData(user);
-		
+			try {
+				driver.addNewUser(user);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				errorsTextArea.setText(e1.getLocalizedMessage());
+				return;
+			}
+			
+			FXMLLoader loader = null;
+			try {
+				loader = new FXMLLoader(getClass().getResource("ShopArea.fxml"));
+				Parent root;
+
+				try {
+				    root = loader.load();
+				} catch (IOException ioe) {
+				    // log exception
+				    return;
+				}
+
+				Scene scene = new Scene(root);
+				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+				
+				Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+				window.setScene(scene);
+				window.show();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			ShopAreaController controller = loader.getController();
+			controller.initData(user);
+		}
+		else {
+			errorsTextArea.setText(errors);
+		}	
 	}
 	
+	public void startShopping(ActionEvent event) {
+		String usernameVal = lusername.getText();
+		String passwordVal = lpassword.getText();
+		errorsArea.setText("");
+		try {
+			driver = (DriverImp) DriverImp.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			errorsArea.setText(errorsArea.getText() + "\n" + e2.getLocalizedMessage());
+		}
+		try {
+			user = driver.getUser(usernameVal, passwordVal);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			errorsArea.setText(errorsArea.getText() + "\n" + e1.getLocalizedMessage());
+			return;
+		}
+		if(user == null) {
+			errorsArea.setText(errorsArea.getText() + "\n- You have not an account, you need to sign-up!");
+			return;
+		}
+		
+		
+		FXMLLoader loader = null;
+		try {
+			loader = new FXMLLoader(getClass().getResource("ShopArea.fxml"));
+			Parent root;
+
+			try {
+			    root = loader.load();
+			} catch (IOException ioe) {
+			    // log exception
+			    return;
+			}
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+			window.setScene(scene);
+			window.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		ShopAreaController controller = loader.getController();
+		controller.initData(user);
+	}
 
 }

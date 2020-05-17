@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -54,12 +55,17 @@
          </children>
       </HBox>
       <Button layoutX="660.0" layoutY="104.0" mnemonicParsing="false" onAction="#search" style="-fx-background-color: #a0b4ec;" text="Search" textAlignment="CENTER" textFill="#2e2e2e" />
-      <Label fx:id="successAdd" layoutX="331.0" layoutY="78.0" prefHeight="19.0" prefWidth="343.0" textFill="#fa4343">
+      <Label fx:id="successAdd" layoutX="331.0" layoutY="78.0" prefHeight="19.0" prefWidth="526.0" textFill="#fa4343">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
       <Button layoutX="780.0" layoutY="104.0" mnemonicParsing="false" onAction="#addToChart" style="-fx-background-color: #ffb902;" text="Add to cart" textAlignment="CENTER" textFill="#2e2e2e" />
       <Button layoutX="780.0" layoutY="472.0" mnemonicParsing="false" onAction="#viewCart" style="-fx-background-color: #54d76c;" text="View the cart" textAlignment="CENTER" textFill="#2e2e2e" />
+      <Hyperlink fx:id="viewP" layoutX="771.0" layoutY="38.0" onAction="#viewProfile" prefHeight="30.0" prefWidth="94.0" text="View Profile" textFill="#54d76c">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Hyperlink>
    </children>
 </AnchorPane>

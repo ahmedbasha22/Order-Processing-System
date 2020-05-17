@@ -45,6 +45,11 @@ public class CartController implements Initializable {
 	@FXML private TextField categoryTextField;
 	@FXML private TextField quantityTextField;
 	
+	
+	public void initData(User user) {
+		this.user = user;
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
