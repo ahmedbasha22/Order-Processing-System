@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -34,11 +35,11 @@ public class TableController implements Initializable {
 	@FXML private TableColumn<Book, String> title;
 	@FXML private TableColumn<Book, List<String>> authors;
 	@FXML private TableColumn<Book, String> publisherName;
-	@FXML private TableColumn<Book, Integer> publicationYear;
-	@FXML private TableColumn<Book, Double> sellingPrice;
+	@FXML private TableColumn<Book, String> publicationYear;
+	@FXML private TableColumn<Book, String> sellingPrice;
 	@FXML private TableColumn<Book, String> category;	
-	@FXML private TableColumn<Book, Integer> quantity;
-	@FXML private TableColumn<Book, Integer> minQuantity;
+	@FXML private TableColumn<Book, String> quantity;
+	@FXML private TableColumn<Book, String> minQuantity;
 	
 	@FXML private TextField isbnTextField;
 	@FXML private TextField titleTextField;
@@ -64,13 +65,13 @@ public class TableController implements Initializable {
 		
 		isbn.setCellValueFactory(new PropertyValueFactory<Book, String>("ISBN"));
 		title.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
-		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, Integer>("publicationYear"));
-		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, Double>("sellingPrice"));
+		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, String>("publicationYear"));
+		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, String>("sellingPrice"));
 		category.setCellValueFactory(new PropertyValueFactory<Book, String>("Category"));
-		quantity.setCellValueFactory(new PropertyValueFactory<Book, Integer>("Quantity"));
+		quantity.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
 		publisherName.setCellValueFactory(new PropertyValueFactory<Book, String>("publisherName"));
 		authors.setCellValueFactory(new PropertyValueFactory<Book, List<String>>("authors"));
-		minQuantity.setCellValueFactory(new PropertyValueFactory<Book, Integer>("minQuantity"));
+		minQuantity.setCellValueFactory(new PropertyValueFactory<Book, String>("minQuantity"));
 		
 		try {
 			tableView.setItems(getBooks());
@@ -80,6 +81,13 @@ public class TableController implements Initializable {
 		}
 		tableView.setEditable(true);
 		isbn.setCellFactory(TextFieldTableCell.forTableColumn());
+		title.setCellFactory(TextFieldTableCell.forTableColumn());
+		publicationYear.setCellFactory(TextFieldTableCell.forTableColumn());
+		sellingPrice.setCellFactory(TextFieldTableCell.forTableColumn());
+		category.setCellFactory(TextFieldTableCell.forTableColumn());
+		quantity.setCellFactory(TextFieldTableCell.forTableColumn());
+		minQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
+		publisherName.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
 	public ObservableList<Book> getBooks() throws SQLException{
@@ -89,16 +97,15 @@ public class TableController implements Initializable {
 		return books;
 	}
 
-	
 	public void newBookButtonPushed() throws SQLException {
 		String isbnValue = isbnTextField.getText();
 		String titleValue = titleTextField.getText();
-		double sellingPriceValue = Double.parseDouble(sellingPriceTextField.getText());
+		String sellingPriceValue = sellingPriceTextField.getText();
 		String categoryValue = categoryTextField.getText();
-		int quantityValue = Integer.parseInt(quantityTextField.getText());
-		int publicationValue = Integer.parseInt(publicationYearTextField.getText());
+		String quantityValue = quantityTextField.getText();
+		String publicationValue = publicationYearTextField.getText();
 		String publisherNameValue = publisherNameTextField.getText();
-		int minQValue = Integer.parseInt(minQuantityTextField.getText());
+		String minQValue = minQuantityTextField.getText();
 		String[] authors = authorsTextField.getText().split(",");
 		List<String> authorsValue = new ArrayList<String>(Arrays.asList(authors));
 		
@@ -106,20 +113,85 @@ public class TableController implements Initializable {
 				categoryValue, quantityValue, publisherNameValue, authorsValue, minQValue);
 		
 		//Add the book to the database
-		driver.addNewBook(book, minQValue);
+		driver.addNewBook(book);
 		successAdd.setText("- The book is added successfully!");
 		tableView.getItems().add(book);
 		
 	}
 	
-	public void editISBN(CellEditEvent editedCell) {
+	public void editISBN(CellEditEvent editedCell) throws NumberFormatException, SQLException {
 		String newISBN =  editedCell.getNewValue().toString();
 		Book newBook = tableView.getSelectionModel().getSelectedItem();
 		//Update Database
-		
-		//driver.modifyBookISBN(InteeditedCell.getOldValue(), newISBN);
+		driver.modifyBookISBN(Integer.parseInt(editedCell.getOldValue().toString()), Integer.parseInt(newISBN));
 		newBook.setISBN(newISBN);
+		successAdd.setText("- ISBN is updated successfully!");
 	}
+	
+	public void editTitle(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newTitle =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookTitle(Integer.parseInt(newBook.getISBN()), newTitle);
+		newBook.setTitle(newTitle);
+		successAdd.setText("- Title is updated successfully!");
+	}
+	
+	public void editPublicationYear(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newPublicationYear =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookPublicationYear(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newPublicationYear));
+		newBook.setPublicationYear(newPublicationYear);
+		successAdd.setText("- Publiction Year is updated successfully!");
+	}
+	
+	public void editSellingPrice(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newSellingPrice =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookSellingPrice(Integer.parseInt(newBook.getISBN()), Double.parseDouble(newSellingPrice));
+		newBook.setSellingPrice(newSellingPrice);
+		successAdd.setText("- Selling Price is updated successfully!");
+	}
+	
+	public void editCategory(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newCategory =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookCategory(Integer.parseInt(newBook.getISBN()), newCategory);
+		newBook.setCategory(newCategory);
+		successAdd.setText("- Category is updated successfully!");
+	}
+	
+	public void editQuantity(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newQuantity =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookQuantity(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newQuantity));
+		newBook.setQuantity(newQuantity);
+		successAdd.setText("- Quantity is updated successfully!");
+	}
+	
+	public void editMinQuantity(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newMinQuantity =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookMinimumQuantity(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newMinQuantity));
+		newBook.setMinQuantity(newMinQuantity);
+		successAdd.setText("- Min. Quantity is updated successfully!");
+	}
+	
+	public void editPublisher(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		String newPublisher =  editedCell.getNewValue().toString();
+		Book newBook = tableView.getSelectionModel().getSelectedItem();
+		//Update Database
+		driver.modifyBookPublisherName(Integer.parseInt(newBook.getISBN()), newPublisher);
+		newBook.setPublisherName(newPublisher);
+		successAdd.setText("- Publisher name is updated successfully!");
+	}
+	
+	
 	
 	
 	

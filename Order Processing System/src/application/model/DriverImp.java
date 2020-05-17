@@ -138,11 +138,11 @@ public class DriverImp implements Driver {
 			PreparedStatement insertStatement = connection.prepareStatement("insert into book values(?,?,?,?,?,?,?,?)");
 			insertStatement.setInt(1, Integer.parseInt(newBook.getISBN()));
 			insertStatement.setString(2, newBook.getTitle());
-			insertStatement.setInt(3, newBook.getPublicationYear());
-			insertStatement.setDouble(4, newBook.getSellingPrice());
+			insertStatement.setInt(3, Integer.parseInt(newBook.getPublicationYear()));
+			insertStatement.setDouble(4, Double.parseDouble(newBook.getSellingPrice()));
 			insertStatement.setString(5, newBook.getCategory());
-			insertStatement.setInt(6, newBook.getQuantity());
-			insertStatement.setInt(7, newBook.getMinQuantity());
+			insertStatement.setInt(6, Integer.parseInt(newBook.getQuantity()));
+			insertStatement.setInt(7, Integer.parseInt(newBook.getMinQuantity()));
 			insertStatement.setString(8, newBook.getPublisherName());
 			insertStatement.executeUpdate();
 			insertStatement.close();
@@ -379,9 +379,9 @@ public class DriverImp implements Driver {
 			List<String> authorList = convertResultSetIntoAuthors(authorSet);
 			authorSet.close();
 			stmt.close();
-			bookList.add(new Book(Integer.toString(ISBN), res.getString("Title"), res.getInt("publication_year"),
-					res.getDouble("selling_price"), res.getString("category"), res.getInt("quantity"),
-					res.getString("publisher_name"), authorList, res.getInt("Minimum_quantity")));
+			bookList.add(new Book(Integer.toString(ISBN), res.getString("Title"), Integer.toString(res.getInt("publication_year")),
+					Double.toString(res.getDouble("selling_price")), res.getString("category"), res.getString("quantity"),
+					res.getString("publisher_name"), authorList, res.getString("Minimum_quantity")));
 		}
 		return bookList;
 	}
@@ -398,6 +398,7 @@ public class DriverImp implements Driver {
 	public List<Book> getBooksByTitle(String title) throws SQLException {
 		return getBookBy("Title", title);
 	}
+	
 
 	@Override
 	public List<Book> getBooksByAuthor(String author) throws SQLException {
@@ -469,7 +470,7 @@ public class DriverImp implements Driver {
 		res.close();
 		stmt.close();
 		for (Book book : bookList) {
-			book.setQuantity(quantityMap.get(book.getISBN()));
+			book.setQuantity(Integer.toString(quantityMap.get(book.getISBN())));
 		}
 		return bookList;
 	}
@@ -516,7 +517,7 @@ public class DriverImp implements Driver {
 			stmt.setDate(4, currentDate);
 			for (Book book : shoppingCart) {
 				stmt.setInt(1, Integer.parseInt(book.getISBN()));
-				stmt.setInt(3, book.getQuantity());
+				stmt.setInt(3, Integer.parseInt(book.getQuantity()));
 				stmt.executeUpdate();
 			}
 			stmt.close();
@@ -556,7 +557,7 @@ public class DriverImp implements Driver {
 		res.close();
 		stmt.close();
 		for (Book book : bookList) {
-			book.setQuantity(quantityMap.get(book.getISBN()));
+			book.setQuantity(Integer.toString(quantityMap.get(book.getISBN())));
 		}
 		return bookList;
 	}

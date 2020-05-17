@@ -18,14 +18,14 @@
             <TableView fx:id="tableView" prefHeight="337.0" prefWidth="944.0" style="-fx-background-color: #e5e7ea;">
               <columns>
                 <TableColumn fx:id="isbn" onEditCommit="#editISBN" prefWidth="75.0" text="ISBN" />
-                <TableColumn fx:id="title" prefWidth="96.79998779296875" text="Title" />
-                  <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="99.20001220703125" text="Publication Year" />
-                  <TableColumn fx:id="sellingPrice" prefWidth="113.5999755859375" text="Selling Price" />
-                  <TableColumn fx:id="category" prefWidth="113.60000610351562" text="Category" />
-                  <TableColumn fx:id="quantity" prefWidth="106.4000244140625" text="Quantity" />
-                  <TableColumn fx:id="publisherName" prefWidth="122.39990234375" text="Publisher Name" />
+                <TableColumn fx:id="title" onEditCommit="#editTitle" prefWidth="96.79998779296875" text="Title" />
+                  <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" onEditCommit="#editPublicationYear" prefWidth="99.20001220703125" text="Publication Year" />
+                  <TableColumn fx:id="sellingPrice" onEditCommit="#editSellingPrice" prefWidth="113.5999755859375" text="Selling Price" />
+                  <TableColumn fx:id="category" onEditCommit="#editCategory" prefWidth="113.60000610351562" text="Category" />
+                  <TableColumn fx:id="quantity" onEditCommit="#editQuantity" prefWidth="106.4000244140625" text="Quantity" />
+                  <TableColumn fx:id="publisherName" onEditCommit="#editPublisher" prefWidth="122.39990234375" text="Publisher Name" />
                   <TableColumn fx:id="authors" prefWidth="115.199951171875" text="Author(s)" />
-                  <TableColumn fx:id="minQuantity" prefWidth="94.4000244140625" text="Min. Quantity" />
+                  <TableColumn fx:id="minQuantity" onEditCommit="#editMinQuantity" prefWidth="94.4000244140625" text="Min. Quantity" />
               </columns>
             </TableView>
             <HBox prefHeight="100.0" prefWidth="832.0" spacing="5.0">
@@ -46,7 +46,7 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="successAdd" prefHeight="19.0" prefWidth="210.0" textFill="#16c72d">
+                  <Label fx:id="successAdd" prefHeight="19.0" prefWidth="249.0" textFill="#16c72d">
                      <font>
                         <Font size="13.0" />
                      </font>

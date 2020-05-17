@@ -7,33 +7,38 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.CheckBox;
 
 public class Book {
 	private SimpleStringProperty ISBN;
 	private SimpleStringProperty title;
 	private List<SimpleStringProperty> authors;
-	private SimpleDoubleProperty sellingPrice;
+	private SimpleStringProperty sellingPrice;
 	private SimpleStringProperty category;
-	private SimpleIntegerProperty quantity;
-	private SimpleIntegerProperty publicationYear;
+	private SimpleStringProperty quantity;
+	private SimpleStringProperty publicationYear;
 	private final StringProperty publisherName;
-	private SimpleIntegerProperty minQuantity;
+	private SimpleStringProperty minQuantity;
+	private CheckBox selected;
+	private SimpleStringProperty addedQ;
 
 	
-	public Book(String ISBN, String title, int publicationYear,  double sellingPrice, 
-			String category, int quantity, String publisherName, List<String> authors, int minQ) {
+	public Book(String ISBN, String title, String publicationYear,  String sellingPrice, 
+			String category, String quantity, String publisherName, List<String> authors, String minQ) {
 		this.ISBN = new SimpleStringProperty(ISBN);
 		this.title = new SimpleStringProperty(title);
-		this.sellingPrice = new SimpleDoubleProperty(sellingPrice);
+		this.sellingPrice = new SimpleStringProperty(sellingPrice);
 		this.category = new SimpleStringProperty(category);
-		this.quantity = new SimpleIntegerProperty(quantity);
-		this.publicationYear = new SimpleIntegerProperty(publicationYear);
+		this.quantity = new SimpleStringProperty(quantity);
+		this.publicationYear = new SimpleStringProperty(publicationYear);
 		this.publisherName = new SimpleStringProperty(publisherName);
-		this.minQuantity = new SimpleIntegerProperty(minQ);
+		this.minQuantity = new SimpleStringProperty(minQ);
 		this.authors = new ArrayList<SimpleStringProperty>();
 		for(String author : authors) {
 			this.authors.add(new SimpleStringProperty(author));
 		}
+		this.selected = new CheckBox();
+		this.addedQ = new SimpleStringProperty("0");
 	}
 
 	public String getISBN() {
@@ -74,13 +79,13 @@ public class Book {
 	}
 
 
-	public double getSellingPrice() {
+	public String getSellingPrice() {
 		return sellingPrice.get();
 	}
 
 
 
-	public void setSellingPrice(double sellingPrice) {
+	public void setSellingPrice(String sellingPrice) {
 		this.sellingPrice.set(sellingPrice);;
 	}
 
@@ -98,25 +103,25 @@ public class Book {
 
 
 
-	public int getQuantity() {
+	public String getQuantity() {
 		return quantity.get();
 	}
 
 
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(String quantity) {
 		this.quantity.set(quantity);
 	}
 
 
 
-	public int getPublicationYear() {
+	public String getPublicationYear() {
 		return publicationYear.get();
 	}
 
 
 
-	public void setPublicationYear(int publicationYear) {
+	public void setPublicationYear(String publicationYear) {
 		this.publicationYear.set(publicationYear);
 	}
 
@@ -134,15 +139,29 @@ public class Book {
 			publisherName.set(value);
 		}
 
-		public int getMinQuantity() {
+		public String getMinQuantity() {
 			return minQuantity.get();
 		}
 
 
 
-		public void setMinQuantity(int minQ) {
+		public void setMinQuantity(String minQ) {
 			this.minQuantity.set(minQ);
 		}
 
+	public CheckBox getSelected() {
+		return this.selected;
+	}
+	
+	public void setSelected(CheckBox cb) {
+		this.selected = cb;
+	}
 
+	public void setAddedQ(String s) {
+		addedQ.set(s);
+	}
+	
+	public String getAddedQ() {
+		return addedQ.get();
+	}
 }

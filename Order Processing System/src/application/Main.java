@@ -15,7 +15,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("BooksWarehouse.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShopArea.fxml"));
 			Parent root;
 
 			try {
@@ -25,7 +25,7 @@ public class Main extends Application {
 			    return;
 			}
 
-			Scene scene = new Scene(root,775,513);
+			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
