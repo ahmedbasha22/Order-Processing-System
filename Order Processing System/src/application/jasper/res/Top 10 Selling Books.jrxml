@@ -51,7 +51,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="26"/>
 				</textElement>
-				<text><![CDATA[Books Sales]]></text>
+				<text><![CDATA[Top 10 Selling Books]]></text>
 			</staticText>
 		</band>
 	</title>
