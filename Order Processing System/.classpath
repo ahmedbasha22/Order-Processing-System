@@ -17,5 +17,12 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/lib/mysql-connector-java-8.0.20.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/commons-collections-3.2.1-1.0.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/commons-logging-1.1.1-api.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/itext-2.1.7.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/itextpdf-5.5.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/jasperreports-5.0.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/jasper/org.apache.commons.beanutils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
