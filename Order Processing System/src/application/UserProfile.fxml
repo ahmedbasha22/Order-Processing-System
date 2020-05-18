@@ -15,16 +15,16 @@
    <left>
       <AnchorPane prefHeight="514.0" prefWidth="257.0" style="-fx-background-color: #34495E;;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="86.0" fitWidth="100.0" layoutX="86.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../Desktop/User-Icon-Grey.png" />
-               </image>
-            </ImageView>
             <Label layoutX="60.0" layoutY="219.0" text="Uer Profile" textFill="#aeb6bf">
                <font>
                   <Font name="Corbel Light" size="32.0" />
                </font>
             </Label>
+            <ImageView fitHeight="90.0" fitWidth="86.0" layoutX="86.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../User-Icon-Grey.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </left>
@@ -70,7 +70,6 @@
                   </Label>
                </children>
             </VBox>
-            <Button layoutX="219.0" layoutY="384.0" mnemonicParsing="false" style="-fx-background-color: #34495E;" text="See the cart" textFill="#e5e5e5" />
             <VBox alignment="TOP_CENTER" layoutX="157.0" layoutY="95.0" prefHeight="282.0" prefWidth="205.0" spacing="11.0">
                <children>
                   <TextField fx:id="firstnameEdit" />
@@ -80,17 +79,7 @@
                   <TextField fx:id="emailEdit" />
                   <TextField fx:id="phoneEdit" />
                   <TextField fx:id="shippingAddressEdit" />
-               </children>
-            </VBox>
-            <VBox alignment="TOP_CENTER" layoutX="312.0" layoutY="95.0" prefHeight="282.0" prefWidth="205.0" spacing="11.0">
-               <children>
-                  <Button fx:id="editFirstname" mnemonicParsing="false" onAction="#eFirstname" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editLastname" mnemonicParsing="false" onAction="#eLastname" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editUsername" mnemonicParsing="false" onAction="#eUsername" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editPassword" mnemonicParsing="false" onAction="#ePassword" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editEmail" mnemonicParsing="false" onAction="#eEmail" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editPhone" mnemonicParsing="false" onAction="#ePhone" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
-                  <Button fx:id="editShippingAddress" mnemonicParsing="false" onAction="#eShippingAddress" style="-fx-background-color: #34495E;" text="Edit" textFill="#e5e5e5" />
+                  <Button mnemonicParsing="false" onAction="#edit" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: #54d76c;" text="Edit" textFill="#0d1146" />
                </children>
             </VBox>
             <Label fx:id="success" layoutX="157.0" layoutY="58.0" prefHeight="19.0" prefWidth="276.0" textFill="#309a12">
@@ -98,6 +87,8 @@
                   <Font size="13.0" />
                </font>
             </Label>
+            <Button fx:id="bShop" layoutX="374.0" layoutY="414.0" mnemonicParsing="false" onAction="#continueShopping" style="-fx-background-color: #34495E;" text="Continue shopping" textFill="#e5e5e5" />
+            <Button fx:id="vCart" layoutX="400.0" layoutY="378.0" mnemonicParsing="false" onAction="#viewCart" style="-fx-background-color: #face1f;" text="View the cart" textFill="#161616" />
          </children>
       </AnchorPane>
    </right>

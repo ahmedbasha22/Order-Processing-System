@@ -39,7 +39,7 @@
             <Font size="13.0" />
          </font>
       </Label>
-      <Label fx:id="successAdd11" layoutX="36.0" layoutY="78.0" prefHeight="19.0" prefWidth="326.0" text="Search fo a book by:" textFill="#e5e7ea">
+      <Label fx:id="successAdd1" layoutX="36.0" layoutY="78.0" prefHeight="19.0" prefWidth="326.0" text="Search fo a book by:" textFill="#e5e7ea">
          <font>
             <Font size="13.0" />
          </font>

@@ -206,7 +206,7 @@ public class ShopAreaController implements Initializable {
 		controller.initData(user);
 	}
 	
-	public void viewProfile(ActionEvent event) throws IOException {
+	public void viewProfile(ActionEvent event) throws IOException, SQLException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("UserProfile.fxml"));
 		Parent root = loader.load();

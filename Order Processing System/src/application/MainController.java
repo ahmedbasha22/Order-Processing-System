@@ -25,12 +25,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -39,7 +41,9 @@ public class MainController {
 	private User user;
 	private DriverImp driver;
 	private Validator validator = new Validator();
-	private Authenticator authenticator;
+	private Validator v = new Validator();
+	Alert alert = new Alert(AlertType.ERROR);
+	Alert alert_success = new Alert(AlertType.CONFIRMATION);
 	
 	public User getUser() {
 		return user;
@@ -61,7 +65,6 @@ public class MainController {
 	@FXML private TextField lusername;
 	@FXML private PasswordField lpassword;
 	
-	@FXML private TextArea errorsTextArea;
 	
 	
 	
@@ -114,7 +117,10 @@ public class MainController {
 		}
 	}
 	
-	public void createUser(ActionEvent event) throws IOException {
+	public void createUser(ActionEvent event) throws IOException, SQLException {
+		
+		driver = (DriverImp) DriverImp.getInstance();
+		
 		String usernameVal = username.getText();
 		String passwordVal = password.getText();
 		String firstnameVal = firstname.getText();
@@ -123,17 +129,21 @@ public class MainController {
 		String phoneVal = phone.getText();
 		String shippingAddressVal = shippingAddress.getText();
 		
+		user = new User(usernameVal, emailVal, passwordVal, lastnameVal, firstnameVal, phoneVal, shippingAddressVal);
+		
 		String errors = validator.newUser(user);
 		if(errors.equals("")) {
-			user = new User(usernameVal, emailVal, passwordVal, lastnameVal, firstnameVal, phoneVal, shippingAddressVal);
-			
 			try {
 				driver.addNewUser(user);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
-				errorsTextArea.setText(e1.getLocalizedMessage());
+				alert.setHeaderText("The account can't be created!");
+				alert.setContentText(errors);
+				alert.showAndWait();
 				return;
 			}
+			alert_success.setHeaderText("The account was created successfully!");
+			alert_success.showAndWait();
 			
 			FXMLLoader loader = null;
 			try {
@@ -162,29 +172,33 @@ public class MainController {
 			controller.initData(user);
 		}
 		else {
-			errorsTextArea.setText(errors);
+			alert.setHeaderText("The account can't be created, please follow these instructions!");
+			alert.setContentText(errors);
+			alert.showAndWait();
 		}	
 	}
 	
 	public void startShopping(ActionEvent event) {
 		String usernameVal = lusername.getText();
 		String passwordVal = lpassword.getText();
-		errorsArea.setText("");
 		try {
 			driver = (DriverImp) DriverImp.getInstance();
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
-			errorsArea.setText(errorsArea.getText() + "\n" + e2.getLocalizedMessage());
+			alert.setContentText(e2.getLocalizedMessage());
+			alert.showAndWait();
 		}
 		try {
 			user = driver.getUser(usernameVal, passwordVal);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
-			errorsArea.setText(errorsArea.getText() + "\n" + e1.getLocalizedMessage());
+			alert.setContentText(e1.getLocalizedMessage());
+			alert.showAndWait();
 			return;
 		}
 		if(user == null) {
-			errorsArea.setText(errorsArea.getText() + "\n- You have not an account, you need to sign-up!");
+			alert.setHeaderText("You have not an account, you need to sign-up first!");
+			alert.showAndWait();
 			return;
 		}
 		
