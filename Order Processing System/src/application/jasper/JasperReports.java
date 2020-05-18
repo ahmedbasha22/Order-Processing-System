@@ -29,7 +29,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class JasperReports {
-	Driver driver;
+	private Driver driver;
 	
 	public JasperReports() {
 		super();
