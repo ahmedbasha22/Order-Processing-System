@@ -1,16 +1,29 @@
 package application;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+import application.model.DriverImp;
 import application.model.User;
+import application.model.Validator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class UserProfileController {
 	
 	private User user;
+	private DriverImp driver;
 	
 	@FXML private Label success;
 	
@@ -21,6 +34,8 @@ public class UserProfileController {
 	@FXML private Button editPassword;
 	@FXML private Button editShippingAddress;
 	@FXML private Button editPhone;
+	@FXML private Button vCart;
+	@FXML private Button bShop;
 	
 	@FXML private TextField usernameEdit;
 	@FXML private PasswordField passwordEdit;
@@ -30,8 +45,13 @@ public class UserProfileController {
 	@FXML private TextField phoneEdit;
 	@FXML private TextField shippingAddressEdit;
 	
+	private Validator v = new Validator();
+	Alert alert = new Alert(AlertType.ERROR);
+	Alert alert_success = new Alert(AlertType.CONFIRMATION);
 	
-	public void initData(User user) {
+	
+	public void initData(User user) throws SQLException {
+		driver = (DriverImp) DriverImp.getInstance();
 		this.user = user;
 		usernameEdit.setText(user.getUsername());
 		firstnameEdit.setText(user.getFirstName());
@@ -41,40 +61,97 @@ public class UserProfileController {
 		shippingAddressEdit.setText(user.getShppingAddress());
 	}
 	
-	public void eUsername(ActionEvent event) {
-		user.setUsername(usernameEdit.getText());
-		usernameEdit.setText(user.getUsername());
-		success.setText("- Username is updated successfully!");
+	public void edit(ActionEvent event) {
+		User temp = new User(usernameEdit.getText(), emailEdit.getText(),
+								passwordEdit.getText(), lastnameEdit.getText(), firstnameEdit.getText(),
+									phoneEdit.getText(), shippingAddressEdit.getText());
+		String errors = v.newUser(temp);
+		if (!errors.equals("")) {
+			alert.setHeaderText("Your information can't be updated!");
+			alert.setContentText(errors);
+			alert.showAndWait();
+		}
+		else {
+			try {
+				user = driver.modifyExistingUser(user.getUsername(), user.getPassword(), temp);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				alert.setHeaderText("Your information can't be updated!");
+				alert.setContentText(e.getLocalizedMessage());
+				alert.showAndWait();
+				return;
+			}
+			alert_success.setHeaderText("Your information is updated successfully!");
+			alert_success.showAndWait();
+		}
+		
 	}
 	
-	public void eFirstname(ActionEvent event) {
-		user.setFirstName(firstnameEdit.getText());
-		success.setText("- First name is updated successfully!");
-	}
 	
-	public void eLastname(ActionEvent event) {
-		user.setLastName(lastnameEdit.getText());
-		success.setText("- Last name is updated successfully!");
-	}
+	
+	public void continueShopping(ActionEvent event) {
+		try {
+			driver = (DriverImp) DriverImp.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+		}
+		
+		FXMLLoader loader = null;
+		try {
+			loader = new FXMLLoader(getClass().getResource("ShopArea.fxml"));
+			Parent root;
 
-	public void eEmail(ActionEvent event) {
-		user.setEmail(emailEdit.getText());
-		success.setText("- e-mail address is updated successfully!");
+			try {
+			    root = loader.load();
+			} catch (IOException ioe) {
+			    // log exception
+			    return;
+			}
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+			window.setScene(scene);
+			window.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		ShopAreaController controller = loader.getController();
+		controller.initData(user);
 	}
-	
-	public void ePassword(ActionEvent event) {
-		user.setPassword(passwordEdit.getText());
-		success.setText("- Password is updated successfully!");
-	}
-	
-	public void ePhone(ActionEvent event) {
-		user.setPhone(phoneEdit.getText());
-		success.setText("- Phone number is updated successfully!");
-	}
-	
-	public void eShippingAddress(ActionEvent event) {
-		user.setShppingAddress(shippingAddressEdit.getText());
-		success.setText("- Shipping address is updated successfully!");
+	public void viewCart(ActionEvent event) {
+		try {
+			driver = (DriverImp) DriverImp.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+		}
+		
+		FXMLLoader loader = null;
+		try {
+			loader = new FXMLLoader(getClass().getResource("Cart.fxml"));
+			Parent root;
+
+			try {
+			    root = loader.load();
+			} catch (IOException ioe) {
+			    // log exception
+			    return;
+			}
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+			window.setScene(scene);
+			window.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		CartController controller = loader.getController();
+		controller.initData(user);
 	}
 
 }

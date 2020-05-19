@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -41,8 +40,8 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="173.0" layoutY="361.0" mnemonicParsing="false" onAction="#createUser" style="-fx-background-color: #34495E;" text="Sign-up" textFill="WHITE" />
-            <Hyperlink layoutX="130.0" layoutY="392.0" onAction="#goLogin" text="Already have an account?" />
+            <Button layoutX="173.0" layoutY="377.0" mnemonicParsing="false" onAction="#createUser" style="-fx-background-color: #34495E;" text="Sign-up" textFill="WHITE" />
+            <Hyperlink layoutX="130.0" layoutY="408.0" onAction="#goLogin" text="Already have an account?" />
             <TextField fx:id="username" layoutX="67.0" layoutY="91.0" prefHeight="26.0" prefWidth="258.0" promptText="Username" />
             <PasswordField fx:id="password" layoutX="67.0" layoutY="138.0" prefHeight="26.0" prefWidth="258.0" promptText="Password" />
             <TextField fx:id="firstname" layoutX="67.0" layoutY="184.0" prefHeight="26.0" prefWidth="113.0" promptText="First name" />
@@ -50,7 +49,6 @@
             <TextField fx:id="email" layoutX="66.0" layoutY="228.0" prefHeight="26.0" prefWidth="258.0" promptText="e-mail address" />
             <TextField fx:id="phone" layoutX="67.0" layoutY="272.0" prefHeight="26.0" prefWidth="258.0" promptText="Phone number" />
             <TextField fx:id="shippingAddress" layoutX="67.0" layoutY="317.0" prefHeight="26.0" prefWidth="258.0" promptText="Shipping address" />
-            <TextArea fx:id="errorsTextArea" editable="false" layoutX="15.0" layoutY="415.0" prefHeight="78.0" prefWidth="362.0" />
          </children>
       </AnchorPane>
    </right>

@@ -1,51 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="920.0" style="-fx-background-color: #34495E;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CartController">
    <children>
-      <VBox layoutX="34.0" layoutY="86.0" prefHeight="398.0" prefWidth="846.0">
+      <VBox layoutX="34.0" layoutY="86.0" prefHeight="445.0" prefWidth="846.0">
          <children>
-            <TableView fx:id="tableView" prefHeight="337.0" prefWidth="944.0" style="-fx-background-color: #e5e7ea;">
+            <TableView fx:id="tableView" prefHeight="345.0" prefWidth="846.0" style="-fx-background-color: #e5e7ea;">
               <columns>
                 <TableColumn fx:id="isbn" prefWidth="75.0" text="ISBN" />
                 <TableColumn fx:id="title" prefWidth="96.79998779296875" text="Title" />
                   <TableColumn fx:id="publicationYear" minWidth="9.60003662109375" prefWidth="99.20001220703125" text="Publication Year" />
                   <TableColumn fx:id="sellingPrice" prefWidth="113.5999755859375" text="Selling Price" />
                   <TableColumn fx:id="category" prefWidth="113.60000610351562" text="Category" />
-                  <TableColumn fx:id="quantity" prefWidth="106.4000244140625" text="Quantity" />
-                  <TableColumn fx:id="publisherName" prefWidth="122.39990234375" text="Publisher Name" />
                   <TableColumn fx:id="authors" prefWidth="115.199951171875" text="Author(s)" />
+                  <TableColumn fx:id="quantity" prefWidth="106.4000244140625" text="Quantity" />
+                  <TableColumn prefWidth="123.20004882812498" text="Select" />
               </columns>
             </TableView>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+            <AnchorPane prefHeight="72.0" prefWidth="846.0">
                <children>
-                  <Label fx:id="successAdd" prefHeight="19.0" prefWidth="249.0" textFill="#16c72d">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets top="25.0" />
-                     </HBox.margin>
-                  </Label>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #cf0000;" text="Remove from cart" textAlignment="CENTER" textFill="#dabdbd">
-                     <HBox.margin>
-                        <Insets left="5.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
+                  <Button layoutX="734.0" layoutY="14.0" mnemonicParsing="false" style="-fx-background-color: #cf0000;" text="Remove from cart" textAlignment="CENTER" textFill="#dabdbd" />
+                  <Button layoutX="245.0" layoutY="14.0" mnemonicParsing="false" prefWidth="67.0" style="-fx-background-color: #face1f;" text="Checkout" textAlignment="CENTER" textFill="#00043c" />
+                  <Label layoutX="7.0" layoutY="18.0" prefHeight="18.0" prefWidth="226.0" text="- Total prices of the books:" textFill="#e5e7ea" />
                </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </HBox>
+            </AnchorPane>
          </children>
       </VBox>
       <Label layoutX="405.0" layoutY="31.0" text="User Cart" textFill="#e5e7ea">
@@ -53,5 +39,10 @@
             <Font name="Corbel" size="27.0" />
          </font>
       </Label>
+      <Hyperlink fx:id="viewP" layoutX="781.0" layoutY="48.0" onAction="#viewProfile" prefHeight="30.0" prefWidth="94.0" text="View Profile" textFill="#54d76c">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Hyperlink>
    </children>
 </AnchorPane>
