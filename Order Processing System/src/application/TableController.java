@@ -15,12 +15,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -28,7 +30,6 @@ public class TableController implements Initializable {
 	
 	private DriverImp driver;
 	
-	@FXML private Label successAdd;
 	
 	@FXML private TableView<Book> tableView;
 	@FXML private TableColumn<Book, String> isbn;
@@ -37,7 +38,7 @@ public class TableController implements Initializable {
 	@FXML private TableColumn<Book, String> publisherName;
 	@FXML private TableColumn<Book, String> publicationYear;
 	@FXML private TableColumn<Book, String> sellingPrice;
-	@FXML private TableColumn<Book, String> category;	
+	@FXML private TableColumn<Book, String> category;
 	@FXML private TableColumn<Book, String> quantity;
 	@FXML private TableColumn<Book, String> minQuantity;
 	
@@ -51,6 +52,8 @@ public class TableController implements Initializable {
 	@FXML private TextField quantityTextField;
 	@FXML private TextField minQuantityTextField;
 	
+	Alert alert = new Alert(AlertType.ERROR);
+	Alert alert_success = new Alert(AlertType.INFORMATION);
 	
 	
 	@Override
@@ -77,7 +80,8 @@ public class TableController implements Initializable {
 			tableView.setItems(getBooks());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			alert.setHeaderText(e.getLocalizedMessage());
+			alert.showAndWait();
 		}
 		tableView.setEditable(true);
 		isbn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -85,7 +89,6 @@ public class TableController implements Initializable {
 		publicationYear.setCellFactory(TextFieldTableCell.forTableColumn());
 		sellingPrice.setCellFactory(TextFieldTableCell.forTableColumn());
 		category.setCellFactory(TextFieldTableCell.forTableColumn());
-		quantity.setCellFactory(TextFieldTableCell.forTableColumn());
 		minQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
 		publisherName.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
@@ -114,7 +117,8 @@ public class TableController implements Initializable {
 		
 		//Add the book to the database
 		driver.addNewBook(book);
-		successAdd.setText("- The book is added successfully!");
+		alert_success.setHeaderText("The book is added successfully!");
+		alert_success.showAndWait();
 		tableView.getItems().add(book);
 		
 	}
@@ -125,7 +129,9 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookISBN(Integer.parseInt(editedCell.getOldValue().toString()), Integer.parseInt(newISBN));
 		newBook.setISBN(newISBN);
-		successAdd.setText("- ISBN is updated successfully!");
+		alert_success.setHeaderText("ISBN is updated successfully!");
+		alert_success.showAndWait();
+		
 	}
 	
 	public void editTitle(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -134,7 +140,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookTitle(Integer.parseInt(newBook.getISBN()), newTitle);
 		newBook.setTitle(newTitle);
-		successAdd.setText("- Title is updated successfully!");
+		alert_success.setHeaderText("Title is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editPublicationYear(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -143,7 +150,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookPublicationYear(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newPublicationYear));
 		newBook.setPublicationYear(newPublicationYear);
-		successAdd.setText("- Publiction Year is updated successfully!");
+		alert_success.setHeaderText("Publication Year is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editSellingPrice(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -152,7 +160,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookSellingPrice(Integer.parseInt(newBook.getISBN()), Double.parseDouble(newSellingPrice));
 		newBook.setSellingPrice(newSellingPrice);
-		successAdd.setText("- Selling Price is updated successfully!");
+		alert_success.setHeaderText("Selling Price is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editCategory(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -161,7 +170,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookCategory(Integer.parseInt(newBook.getISBN()), newCategory);
 		newBook.setCategory(newCategory);
-		successAdd.setText("- Category is updated successfully!");
+		alert_success.setHeaderText("Category is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editQuantity(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -170,7 +180,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookQuantity(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newQuantity));
 		newBook.setQuantity(newQuantity);
-		successAdd.setText("- Quantity is updated successfully!");
+		alert_success.setHeaderText("Quantity is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editMinQuantity(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -179,7 +190,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookMinimumQuantity(Integer.parseInt(newBook.getISBN()), Integer.parseInt(newMinQuantity));
 		newBook.setMinQuantity(newMinQuantity);
-		successAdd.setText("- Min. Quantity is updated successfully!");
+		alert_success.setHeaderText("Minimum quantity is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	public void editPublisher(CellEditEvent editedCell) throws NumberFormatException, SQLException {
@@ -188,7 +200,8 @@ public class TableController implements Initializable {
 		//Update Database
 		driver.modifyBookPublisherName(Integer.parseInt(newBook.getISBN()), newPublisher);
 		newBook.setPublisherName(newPublisher);
-		successAdd.setText("- Publisher name is updated successfully!");
+		alert_success.setHeaderText("Publisher name is updated successfully!");
+		alert_success.showAndWait();
 	}
 	
 	

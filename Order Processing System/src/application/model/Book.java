@@ -21,7 +21,7 @@ public class Book {
 	private SimpleStringProperty minQuantity;
 	private CheckBox selected;
 	private SimpleStringProperty addedQ;
-
+	private SimpleStringProperty finalQuantity;
 	
 	public Book(String ISBN, String title, String publicationYear,  String sellingPrice, 
 			String category, String quantity, String publisherName, List<String> authors, String minQ) {
@@ -39,6 +39,7 @@ public class Book {
 		}
 		this.selected = new CheckBox();
 		this.addedQ = new SimpleStringProperty("0");
+		finalQuantity = new SimpleStringProperty("0");
 	}
 
 	public String getISBN() {
@@ -63,6 +64,13 @@ public class Book {
 		this.title.set(title);
 	}
 
+	public String getFinalQuantity() {
+		return finalQuantity.get();
+	}
+
+	public void setFinalQuantity(String f) {
+		this.finalQuantity.set(f);
+	}
 
 	public List<String> getAuthors() {
 		List<String> result = new ArrayList<String>();

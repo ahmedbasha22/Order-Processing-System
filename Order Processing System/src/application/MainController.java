@@ -144,7 +144,6 @@ public class MainController {
 			}
 			alert_success.setHeaderText("The account was created successfully!");
 			alert_success.showAndWait();
-			
 			FXMLLoader loader = null;
 			try {
 				loader = new FXMLLoader(getClass().getResource("ShopArea.fxml"));
@@ -181,12 +180,19 @@ public class MainController {
 	public void startShopping(ActionEvent event) {
 		String usernameVal = lusername.getText();
 		String passwordVal = lpassword.getText();
+		
 		try {
 			driver = (DriverImp) DriverImp.getInstance();
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
 			alert.setContentText(e2.getLocalizedMessage());
 			alert.showAndWait();
+		}
+		try {
+			driver.clearShoppingCart(usernameVal);
+		} catch (SQLException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
 		}
 		try {
 			user = driver.getUser(usernameVal, passwordVal);

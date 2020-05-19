@@ -372,16 +372,12 @@ public class DriverImp implements Driver {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet res = stmt.executeQuery("SELECT * FROM book Where ISBN = " + ISBN);
-			Book book = null;
-			if(res.next()){
-				res.previous();
-				book = convertResultSetIntoBooks(res).get(0);				
-			}
+			List<Book> book = convertResultSetIntoBooks(res);
 			res.close();
 			stmt.close();
 			connection.commit();
 			connection.setAutoCommit(true);
-			return book;
+			return book.isEmpty() ? null : book.get(0);
 		} catch (SQLException e) {
 			connection.rollback();
 			connection.setAutoCommit(true);
@@ -520,7 +516,7 @@ public class DriverImp implements Driver {
 				.executeQuery("SELECT ISBN, quantity FROM shopping_cart Where user_name = " + "'" + userName + "'");
 		while (res.next()) {
 			quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("quantity"));
-			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+			bookList.add(getBookByISBN(res.getInt("ISBN")));
 		}
 		res.close();
 		stmt.close();

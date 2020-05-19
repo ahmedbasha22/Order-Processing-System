@@ -47,7 +47,7 @@ public class UserProfileController {
 	
 	private Validator v = new Validator();
 	Alert alert = new Alert(AlertType.ERROR);
-	Alert alert_success = new Alert(AlertType.CONFIRMATION);
+	Alert alert_success = new Alert(AlertType.INFORMATION);
 	
 	
 	public void initData(User user) throws SQLException {
@@ -151,6 +151,39 @@ public class UserProfileController {
 			e.printStackTrace();
 		}
 		CartController controller = loader.getController();
+		controller.initData(user);
+	}
+	
+	public void viewManagement(ActionEvent event) throws SQLException {
+		try {
+			driver = (DriverImp) DriverImp.getInstance();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+		}
+		
+		FXMLLoader loader = null;
+		try {
+			loader = new FXMLLoader(getClass().getResource("Management.fxml"));
+			Parent root;
+
+			try {
+			    root = loader.load();
+			} catch (IOException ioe) {
+			    // log exception
+			    return;
+			}
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+			window.setScene(scene);
+			window.show();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		ManagementController controller = loader.getController();
 		controller.initData(user);
 	}
 

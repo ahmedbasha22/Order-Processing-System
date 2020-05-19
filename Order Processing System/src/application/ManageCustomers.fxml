@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ManageCustomersController">
+   <left>
+      <AnchorPane prefHeight="538.0" prefWidth="355.0" style="-fx-background-color: #34495E;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="61.0" layoutY="233.0" text="Manage Customers" textFill="#aeb6bf">
+               <font>
+                  <Font name="Corbel Light" size="30.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="103.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../Desktop/112-512.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </left>
+   <right>
+      <AnchorPane prefHeight="538.0" prefWidth="560.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="tableView" layoutX="75.0" layoutY="101.0" prefHeight="302.0" prefWidth="410.0">
+              <columns>
+                <TableColumn fx:id="username" prefWidth="128.0" text="Username" />
+                <TableColumn fx:id="email" minWidth="5.60003662109375" prefWidth="176.00006103515625" text="email" />
+                  <TableColumn fx:id="selected" minWidth="0.0" prefWidth="106.39990234375" text="Promote" />
+              </columns>
+            </TableView>
+            <Button layoutX="397.0" layoutY="423.0" mnemonicParsing="false" style="-fx-background-color: #face1f;" text="Save changes" />
+            <Button layoutX="376.0" layoutY="458.0" mnemonicParsing="false" onAction="#continueShopping" style="-fx-background-color: #34495E;" text="Contiue shopping" textFill="#ededed" />
+         </children>
+      </AnchorPane>
+   </right>
+</BorderPane>

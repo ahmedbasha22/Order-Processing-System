@@ -17,12 +17,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -54,6 +56,11 @@ public class ShopAreaController implements Initializable {
 	@FXML private TextField searchAuthors;
 	
 	@FXML private Hyperlink viewP;
+	
+	Alert alert = new Alert(AlertType.ERROR);
+	Alert alert_success = new Alert(AlertType.INFORMATION);
+	
+	
 	
 	public void initData(User user) {
 		this.user = user;
@@ -91,51 +98,57 @@ public class ShopAreaController implements Initializable {
 	public ObservableList<Book> getBooks() throws SQLException{
 		ObservableList<Book> books = FXCollections.observableArrayList();
 		List<Book> b = driver.getAllBooks();
-		books.addAll(b);
+		for(Book temp : b) {
+			if(Integer.parseInt(temp.getQuantity()) > Integer.parseInt(temp.getMinQuantity())) books.add(temp);
+		}
 		return books;
 	}
 	
 	public void addToChart(ActionEvent event) throws SQLException {
+		String successM = "";
+		alert_success.setHeaderText("These books were added to cart successfully!");
 		ObservableList<Book> books = tableView.getItems();
 		ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
-		boolean found = false;
-		String a = "";
 		for(Book sb : books) {
 			if(sb.getSelected().isSelected()) {
-				a += sb.getAddedQ();
 				if((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) < Integer.parseInt(sb.getMinQuantity())) {
-					found = true;
+					alert.setHeaderText("There is not available quantity of " + sb.getTitle() + " book!");
+					alert.showAndWait();
+					return;
 				}
 				else if ((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) == Integer.parseInt(sb.getMinQuantity())){
 					selectedBooks.add(sb);
+					sb.setFinalQuantity(Integer.toString(Integer.parseInt(sb.getFinalQuantity()) + Integer.parseInt(sb.getAddedQ())));
 					try {
 						driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
-						successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!, No more of this book!");
-						successAdd.setText("");
+						successM += sb.getAddedQ() + " of " + sb.getTitle() + " book, No more of this book!\n";
+						sb.setQuantity(Integer.toString((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ()))));
+						driver.modifyBookQuantity(Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getQuantity()));
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
-						successAdd1.setText("");
-						successAdd.setText(e1.getMessage());
+						alert.setHeaderText(e1.getLocalizedMessage());
+						alert.showAndWait();
+						return;
 					}
 				}
 				else {
+					sb.setFinalQuantity(Integer.toString(Integer.parseInt(sb.getFinalQuantity()) + Integer.parseInt(sb.getAddedQ())));
 					try {
 						driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
 						sb.setQuantity(Integer.toString((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ()))));
-						successAdd1.setText("Added "+ sb.getAddedQ() + " to the cart successfully!");
-						successAdd.setText("");
+						driver.modifyBookQuantity(Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getQuantity()));
+						successM += sb.getAddedQ() + " of " + sb.getTitle() + " book\n";
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						successAdd1.setText("");
 						successAdd.setText(e1.getMessage());
+						e1.printStackTrace();
 					}
 				}
 			}
 		}
-		if(found) {
-			successAdd.setText("There is not available quantity for this book!");
-			successAdd1.setText("");
-		}
+		alert_success.setContentText(successM);
+		alert_success.showAndWait();
 		books.removeAll(selectedBooks);
 		tableView.setItems(books);
 	}
@@ -161,33 +174,34 @@ public class ShopAreaController implements Initializable {
 		String sellingPrice = searchSellingPrice.getText();
 		String category = searchCategory.getText();
 		String author = searchAuthors.getText();
+		ObservableList<Book> books = FXCollections.observableArrayList();
+		List<Book> matchedBooks = null;
 		if(!isbn.equals("")) {
-			List<Book> matchedBooks = driver.getBooksByISBN(Integer.parseInt(isbn));
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksByISBN(Integer.parseInt(isbn));
+			
 		}
 		else if(!title.equals("")) {
-			List<Book> matchedBooks = driver.getBooksByTitle(title);
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksByTitle(title);
 		}
 		else if(!publicationYear.equals("")) {
-			List<Book> matchedBooks = driver.getBooksByPublicationYear(Integer.parseInt(publicationYear));
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksByPublicationYear(Integer.parseInt(publicationYear));
 		}
 		else if(!sellingPrice.equals("")) {
-			List<Book> matchedBooks = driver.getBooksBySellingPrice(Double.parseDouble(sellingPrice));
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksBySellingPrice(Double.parseDouble(sellingPrice));
 		}
 		else if(!category.equals("")) {
-			List<Book> matchedBooks = driver.getBooksByCatgory(category);
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksByCatgory(category);
 		}
 		else if(!author.equals("")) {
-			List<Book> matchedBooks = driver.getBooksByAuthor(author);
-			newBooks.addAll(matchedBooks);
+			matchedBooks = driver.getBooksByAuthor(author);
 		}
 		else {
-			newBooks.addAll(driver.getAllBooks());
+			matchedBooks = driver.getAllBooks();
 		}
+		for(Book temp : matchedBooks) {
+			if(Integer.parseInt(temp.getQuantity()) > Integer.parseInt(temp.getMinQuantity())) books.add(temp);
+		}
+		newBooks.addAll(books);
 		tableView.setItems(newBooks);
 	}
 	

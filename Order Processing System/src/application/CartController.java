@@ -18,12 +18,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
 public class CartController implements Initializable {
@@ -33,6 +38,7 @@ public class CartController implements Initializable {
 	private User user;
 	
 	@FXML private Label successAdd;
+	@FXML private Label costLabel;
 	
 	@FXML private TableView<Book> tableView;
 	@FXML private TableColumn<Book, String> isbn;
@@ -42,19 +48,14 @@ public class CartController implements Initializable {
 	@FXML private TableColumn<Book, String> publicationYear;
 	@FXML private TableColumn<Book, String> sellingPrice;
 	@FXML private TableColumn<Book, String> category;	
-	@FXML private TableColumn<Book, String> quantity;
+	@FXML private TableColumn<Book, String> finalQuantity;
+	@FXML private TableColumn<Book, CheckBox> selected;
 	
-	@FXML private TextField isbnTextField;
-	@FXML private TextField titleTextField;
-	@FXML private TextField authorsTextField;
-	@FXML private TextField publisherNameTextField;
-	@FXML private TextField publicationYearTextField;
-	@FXML private TextField sellingPriceTextField;
-	@FXML private TextField categoryTextField;
-	@FXML private TextField quantityTextField;
 	
 	@FXML private Hyperlink viewP;
 	
+	Alert alert = new Alert(AlertType.ERROR);
+	Alert alert_success = new Alert(AlertType.CONFIRMATION);
 	
 	public void initData(User user) {
 		this.user = user;
@@ -64,6 +65,7 @@ public class CartController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		computeCost();
 	}
 	
 	@Override
@@ -82,17 +84,18 @@ public class CartController implements Initializable {
 		publicationYear.setCellValueFactory(new PropertyValueFactory<Book, String>("publicationYear"));
 		sellingPrice.setCellValueFactory(new PropertyValueFactory<Book, String>("sellingPrice"));
 		category.setCellValueFactory(new PropertyValueFactory<Book, String>("Category"));
-		quantity.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
-		authors.setCellValueFactory(new PropertyValueFactory<Book, List<String>>("authors"));
+		finalQuantity.setCellValueFactory(new PropertyValueFactory<Book, String>("quantity"));
+		authors.setCellValueFactory(new PropertyValueFactory<Book, List<String>>("authors"));	
+		selected.setCellValueFactory(new PropertyValueFactory<Book, CheckBox>("selected"));
 		
-		
+		tableView.setEditable(true);
+		finalQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
 	public ObservableList<Book> getBooks() throws SQLException{
 		ObservableList<Book> books = FXCollections.observableArrayList();
 		List<Book> b = null;
 		try {
-			
 			b = driver.getShoppingCart(user.getUsername());
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -115,6 +118,79 @@ public class CartController implements Initializable {
 			
 		UserProfileController controller = loader.getController();
 		controller.initData(user);
+	}
+	
+	public void removeFromChart(ActionEvent event) throws SQLException {
+		String successM = "";
+		alert_success.setHeaderText("These books were removed cart successfully!");
+		ObservableList<Book> books = tableView.getItems();
+		ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
+		for(Book sb : books) {
+			if(sb.getSelected().isSelected()) {
+				if((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) < 0) {
+					alert.setHeaderText("Please insert correct quantity to remove!");
+					alert.showAndWait();
+					return;
+				}
+				else if ((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ())) == 0){
+					selectedBooks.add(sb);
+					try {
+						driver.removeBookFromShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()));
+						Book t = driver.getBooksByISBN(Integer.parseInt(sb.getISBN())).get(0);
+						t.setQuantity(Integer.toString((Integer.parseInt(t.getQuantity()) + Integer.parseInt(sb.getAddedQ()))));
+						driver.modifyBookQuantity(Integer.parseInt(sb.getISBN()), Integer.parseInt(t.getQuantity()));
+						successM += sb.getAddedQ() + " of " + sb.getTitle() + " book, No more of this book in the cart!\n";
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						alert.setHeaderText(e1.getLocalizedMessage());
+						alert.showAndWait();
+						return;
+					}
+				}
+				else {
+					try {
+					//	driver.addBookToShoppingCart(user.getUsername(), Integer.parseInt(sb.getISBN()), Integer.parseInt(sb.getAddedQ()));
+						sb.setQuantity(Integer.toString((Integer.parseInt(sb.getQuantity()) - Integer.parseInt(sb.getAddedQ()))));
+						Book t = driver.getBooksByISBN(Integer.parseInt(sb.getISBN())).get(0);
+						t.setQuantity(Integer.toString((Integer.parseInt(t.getQuantity()) + Integer.parseInt(sb.getAddedQ()))));
+						driver.modifyBookQuantity(Integer.parseInt(sb.getISBN()), Integer.parseInt(t.getQuantity()));
+						successM += sb.getAddedQ() + " of " + sb.getTitle() + " book\n";
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						successAdd.setText(e1.getMessage());
+					}
+				}
+			}
+		}
+		alert_success.setContentText(successM);
+		alert_success.showAndWait();
+		books.removeAll(selectedBooks);
+		tableView.setItems(books);
+		computeCost();
+	}
+	
+	public void updateQuantity(CellEditEvent editedCell) throws NumberFormatException, SQLException {
+		ObservableList<Book> books = tableView.getItems();
+		ObservableList<Book> newBooks = FXCollections.observableArrayList();
+		String removedQuantity =  editedCell.getNewValue().toString();
+		Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+		selectedBook.setAddedQ(removedQuantity);
+		for(Book b : books) {
+			if(b.getISBN() == selectedBook.getISBN()) newBooks.add(selectedBook);
+			else newBooks.add(b);
+		}
+		tableView.setItems(newBooks);
+	}
+	
+	public void computeCost() {
+		ObservableList<Book> books = tableView.getItems();
+		double cost = 0;
+		if(books != null) {
+			for(Book b : books) {
+				cost += Double.parseDouble(b.getSellingPrice()) * Double.parseDouble(b.getQuantity());
+			}
+		}
+		costLabel.setText(Double.toString(cost) + " $");
 	}
 
 }
