@@ -49,6 +49,8 @@ public interface Driver {
 
 	public List<Book> getAllBooks() throws SQLException;
 	
+	public Book getBookByISBN(int ISBN) throws SQLException;
+	
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException;
 
 	public List<Book> getBooksByTitle(String title) throws SQLException;
@@ -86,4 +88,5 @@ public interface Driver {
 	public List<Book> getTop10SoldBooks() throws SQLException;
 
 	public void close() throws SQLException;
+
 }

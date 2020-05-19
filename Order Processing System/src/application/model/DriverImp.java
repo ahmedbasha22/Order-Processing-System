@@ -346,6 +346,29 @@ public class DriverImp implements Driver {
 	}
 
 	@Override
+	public Book getBookByISBN(int ISBN) throws SQLException {
+		connection.setAutoCommit(false);
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery("SELECT * FROM book Where ISBN = " + ISBN);
+			Book book = null;
+			if(res.next()){
+				res.previous();
+				book = convertResultSetIntoBooks(res).get(0);				
+			}
+			res.close();
+			stmt.close();
+			connection.commit();
+			connection.setAutoCommit(true);
+			return book;
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}	
+	}
+	
+	@Override
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException {
 		return getBookBy("ISBN", Integer.toString(ISBN));
 	}
