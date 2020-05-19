@@ -88,6 +88,27 @@ public class DriverImp implements Driver {
 		return user;
 	}
 
+	@Override	
+	public List<User> getAllUsers() throws SQLException{
+		PreparedStatement statement = connection.prepareStatement("select * from user");
+		ResultSet resultSet = statement.executeQuery();
+		List<User> userList = new ArrayList<>();
+		while(resultSet.next()) {
+			User user = new User(resultSet.getString(1), resultSet.getString(2), null, resultSet.getString(4),
+					resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
+			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
+			statement2.setString(1, resultSet.getString(1));
+			ResultSet resultSet2 = statement2.executeQuery();
+			user.setManager(resultSet.next());
+			resultSet2.close();
+			statement2.close();
+			userList.add(user);
+		}
+		resultSet.close();
+		statement.close();
+		return userList;
+	}
+
 	@Override
 	public boolean authenticateUser(String username, String password) throws SQLException {
 		PreparedStatement statement = connection

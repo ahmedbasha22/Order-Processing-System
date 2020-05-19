@@ -13,6 +13,8 @@ public interface Driver {
 
 	public User getUser(String username, String password) throws SQLException;
 
+	public List<User> getAllUsers() throws SQLException;
+
 	public boolean authenticateUser(String username, String password) throws SQLException;
 
 	public User modifyExistingUser(String oldUsername, String oldPassword, User newUserInfo) throws SQLException;
