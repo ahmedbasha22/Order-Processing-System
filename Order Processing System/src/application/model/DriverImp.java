@@ -88,12 +88,12 @@ public class DriverImp implements Driver {
 		return user;
 	}
 
-	@Override	
-	public List<User> getAllUsers() throws SQLException{
+	@Override
+	public List<User> getAllUsers() throws SQLException {
 		PreparedStatement statement = connection.prepareStatement("select * from user");
 		ResultSet resultSet = statement.executeQuery();
 		List<User> userList = new ArrayList<>();
-		while(resultSet.next()) {
+		while (resultSet.next()) {
 			User user = new User(resultSet.getString(1), resultSet.getString(2), null, resultSet.getString(4),
 					resultSet.getString(5), resultSet.getString(6), resultSet.getString(7));
 			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
@@ -183,10 +183,11 @@ public class DriverImp implements Driver {
 			throw e;
 		}
 	}
-	
+
 	@Override
-	public boolean isPublisherExist(String publisherName) throws SQLException{
-		PreparedStatement statement = connection.prepareStatement("select name from publisher where name = ?");;
+	public boolean isPublisherExist(String publisherName) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement("select name from publisher where name = ?");
+		;
 		statement.setString(1, publisherName);
 		ResultSet resultSet = statement.executeQuery();
 		boolean result = resultSet.next();
@@ -212,7 +213,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, oldISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(newISBN).get(0);
+		return getBookByISBN(newISBN);
 	}
 
 	@Override
@@ -222,7 +223,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -242,12 +243,12 @@ public class DriverImp implements Driver {
 			insertAuthor.close();
 			connection.commit();
 			connection.setAutoCommit(true);
+			return getBookByISBN(ISBN);
 		} catch (SQLException e) {
 			connection.rollback();
 			connection.setAutoCommit(true);
 			throw e;
 		}
-		return getBooksByISBN(ISBN).get(0);
 	}
 
 	@Override
@@ -257,7 +258,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -267,7 +268,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -277,7 +278,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -288,7 +289,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -299,7 +300,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -309,7 +310,7 @@ public class DriverImp implements Driver {
 		statement.setInt(2, ISBN);
 		statement.executeUpdate();
 		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		return getBookByISBN(ISBN);
 	}
 
 	@Override
@@ -327,15 +328,71 @@ public class DriverImp implements Driver {
 
 	@Override
 	public Book orderMoreQuantity(int ISBN, int addedQuantity) throws SQLException {
-		PreparedStatement statement = connection
-				.prepareStatement("update book set quantity = quantity + ? where ISBN = ?");
-		statement.setInt(1, addedQuantity);
-		statement.setInt(2, ISBN);
-		statement.executeUpdate();
-		statement.close();
-		return getBooksByISBN(ISBN).get(0);
+		connection.setAutoCommit(false);
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery("select quantity from book_order where ISBN = " + ISBN);
+			if (res.next()) {
+				PreparedStatement statement = connection
+						.prepareStatement("update book_order set quantity = quantity + ? where ISBN = ?");
+				statement.setInt(1, addedQuantity);
+				statement.setInt(2, ISBN);
+				statement.executeUpdate();
+				statement.close();
+			}else {
+				PreparedStatement statement = connection
+						.prepareStatement("insert into book_order values(?,?)");
+				statement.setInt(1, ISBN);
+				statement.setInt(2, addedQuantity);
+				statement.executeUpdate();
+				statement.close();				
+			}
+			res.close();
+			stmt.close();
+			connection.commit();
+			connection.setAutoCommit(true);
+			return getBookByISBN(ISBN);
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}
 	}
 
+	@Override
+	public List<Book> getOrderedBooks() throws SQLException {
+		connection.setAutoCommit(false);
+		try {
+			Map<String, Integer> quantityMap = new HashMap<>();
+			List<Book> bookList = new ArrayList<>();
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery("select * from book_order");
+			while (res.next()) {
+				quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("quantity"));
+				bookList.add(getBookByISBN(res.getInt("ISBN")));
+			}
+			res.close();
+			stmt.close();
+			for (Book book : bookList) {
+				book.setQuantity(Integer.toString(quantityMap.get(book.getISBN())));
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+			return bookList;
+		} catch (SQLException e) {
+			connection.rollback();
+			connection.setAutoCommit(true);
+			throw e;
+		}
+	}
+
+	@Override
+	public void confirmOrder(int ISBN) throws SQLException {
+		Statement stmt = connection.createStatement();
+		stmt.executeUpdate("delete from book_order where ISBN = " + ISBN);
+		stmt.close();
+	}
+	
 	@Deprecated
 	public int getMinimumQuantity(int ISBN) throws SQLException {
 		Statement stmt = connection.createStatement();
@@ -382,9 +439,9 @@ public class DriverImp implements Driver {
 			connection.rollback();
 			connection.setAutoCommit(true);
 			throw e;
-		}	
+		}
 	}
-	
+
 	@Override
 	public List<Book> getBooksByISBN(int ISBN) throws SQLException {
 		return getBookBy("ISBN", Integer.toString(ISBN));
@@ -417,9 +474,10 @@ public class DriverImp implements Driver {
 			List<String> authorList = convertResultSetIntoAuthors(authorSet);
 			authorSet.close();
 			stmt.close();
-			bookList.add(new Book(Integer.toString(ISBN), res.getString("Title"), Integer.toString(res.getInt("publication_year")),
-					Double.toString(res.getDouble("selling_price")), res.getString("category"), res.getString("quantity"),
-					res.getString("publisher_name"), authorList, res.getString("Minimum_quantity")));
+			bookList.add(new Book(Integer.toString(ISBN), res.getString("Title"),
+					Integer.toString(res.getInt("publication_year")), Double.toString(res.getDouble("selling_price")),
+					res.getString("category"), res.getString("quantity"), res.getString("publisher_name"), authorList,
+					res.getString("Minimum_quantity")));
 		}
 		return bookList;
 	}
@@ -436,7 +494,6 @@ public class DriverImp implements Driver {
 	public List<Book> getBooksByTitle(String title) throws SQLException {
 		return getBookBy("Title", title);
 	}
-	
 
 	@Override
 	public List<Book> getBooksByAuthor(String author) throws SQLException {
@@ -445,7 +502,7 @@ public class DriverImp implements Driver {
 				.executeQuery("SELECT distinct ISBN FROM book_author where author_name LIKE " + "'" + author + "%'");
 		List<Book> bookList = new ArrayList<>();
 		while (res.next()) {
-			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+			bookList.add(getBookByISBN(res.getInt("ISBN")));
 		}
 		res.close();
 		stmt.close();
@@ -491,16 +548,16 @@ public class DriverImp implements Driver {
 		stmt.setInt(1, bookISBN);
 		stmt.setString(2, username);
 		ResultSet res = stmt.executeQuery();
-		if(res.next()) {
+		if (res.next()) {
 			cart = modifyBookInShoppingCart(username, bookISBN, res.getInt("quantity") + quantity);
-		}else {
+		} else {
 			PreparedStatement insertStatement = connection.prepareStatement("insert into shopping_cart values(?,?,?)");
 			insertStatement.setInt(1, bookISBN);
 			insertStatement.setString(2, username);
 			insertStatement.setInt(3, quantity);
 			insertStatement.executeUpdate();
-			insertStatement.close();		
-			cart = getShoppingCart(username);	
+			insertStatement.close();
+			cart = getShoppingCart(username);
 		}
 		res.close();
 		stmt.close();
@@ -603,7 +660,7 @@ public class DriverImp implements Driver {
 		ResultSet res = stmt.executeQuery(sql);
 		while (res.next()) {
 			quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("sum(quantity)"));
-			bookList.addAll(getBooksByISBN(res.getInt("ISBN")));
+			bookList.add(getBookByISBN(res.getInt("ISBN")));
 		}
 		res.close();
 		stmt.close();

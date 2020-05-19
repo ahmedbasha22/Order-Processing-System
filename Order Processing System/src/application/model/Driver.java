@@ -49,6 +49,10 @@ public interface Driver {
 
 	public Book orderMoreQuantity(int ISBN, int addedQuantity) throws SQLException;
 
+	public List<Book> getOrderedBooks() throws SQLException;
+	
+	public void confirmOrder(int ISBN) throws SQLException;	
+	
 	public List<Book> getAllBooks() throws SQLException;
 	
 	public Book getBookByISBN(int ISBN) throws SQLException;
