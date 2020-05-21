@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,10 +12,16 @@ import com.mysql.cj.jdbc.Driver;
 
 import application.model.Book;
 import application.model.DriverImp;
+import application.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -25,10 +32,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 
 public class TableController implements Initializable {
 	
 	private DriverImp driver;
+	private User user;
+	
 	
 	
 	@FXML private TableView<Book> tableView;
@@ -55,6 +65,9 @@ public class TableController implements Initializable {
 	Alert alert = new Alert(AlertType.ERROR);
 	Alert alert_success = new Alert(AlertType.INFORMATION);
 	
+	public void initData(User user) {
+		this.user = user;
+	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -204,7 +217,35 @@ public class TableController implements Initializable {
 		alert_success.showAndWait();
 	}
 	
+	public void continueShopping(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("ShopArea.fxml"));
+		Parent root = loader.load();
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+			
+		ShopAreaController controller = loader.getController();
+		controller.initData(user);
+	}
 	
+	public void viewCart(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("Cart.fxml"));
+		Parent root = loader.load();
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+			
+		CartController controller = loader.getController();
+		controller.initData(user);
+	}
 	
 	
 	

@@ -13,7 +13,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="1013.0" style="-fx-background-color: #34495E;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TableController">
    <children>
-      <VBox layoutX="34.0" layoutY="86.0" prefHeight="398.0" prefWidth="939.0">
+      <VBox layoutX="34.0" layoutY="86.0" prefHeight="354.0" prefWidth="939.0">
          <children>
             <TableView fx:id="tableView" prefHeight="337.0" prefWidth="944.0" style="-fx-background-color: #e5e7ea;">
               <columns>
@@ -65,5 +65,7 @@
             <Font name="Corbel" size="27.0" />
          </font>
       </Label>
+      <Button layoutX="908.0" layoutY="450.0" mnemonicParsing="false" onAction="#viewCart" style="-fx-background-color: #face1f;" text="View cart" />
+      <Button layoutX="855.0" layoutY="483.0" mnemonicParsing="false" onAction="#continueShopping" style="-fx-background-color: #aeb6bf;" text="Continue shopping" textFill="#262626" />
    </children>
 </AnchorPane>

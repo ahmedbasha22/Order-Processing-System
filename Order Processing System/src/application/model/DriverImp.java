@@ -79,7 +79,7 @@ public class DriverImp implements Driver {
 			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
 			statement2.setString(1, username);
 			ResultSet resultSet2 = statement2.executeQuery();
-			user.setManager(resultSet.next());
+			user.setManager(resultSet2.next());
 			resultSet2.close();
 			statement2.close();
 		}
@@ -99,7 +99,7 @@ public class DriverImp implements Driver {
 			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
 			statement2.setString(1, resultSet.getString(1));
 			ResultSet resultSet2 = statement2.executeQuery();
-			user.setManager(resultSet.next());
+			user.setManager(resultSet2.next());
 			resultSet2.close();
 			statement2.close();
 			userList.add(user);
@@ -415,21 +415,12 @@ public class DriverImp implements Driver {
 
 	@Override
 	public Book getBookByISBN(int ISBN) throws SQLException {
-		connection.setAutoCommit(false);
-		try {
-			Statement stmt = connection.createStatement();
-			ResultSet res = stmt.executeQuery("SELECT * FROM book Where ISBN = " + ISBN);
-			List<Book> book = convertResultSetIntoBooks(res);
-			res.close();
-			stmt.close();
-			connection.commit();
-			connection.setAutoCommit(true);
-			return book.isEmpty() ? null : book.get(0);
-		} catch (SQLException e) {
-			connection.rollback();
-			connection.setAutoCommit(true);
-			throw e;
-		}
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt.executeQuery("SELECT * FROM book Where ISBN = " + ISBN);
+		List<Book> book = convertResultSetIntoBooks(res);
+		res.close();
+		stmt.close();
+		return book.isEmpty() ? null : book.get(0);
 	}
 
 	@Override
@@ -678,7 +669,7 @@ public class DriverImp implements Driver {
 			PreparedStatement statement2 = connection.prepareStatement("select * from manager where user_name = ?");
 			statement2.setString(1, nameResultSet.getString("username"));
 			ResultSet resultSet2 = statement2.executeQuery();
-			user.setManager(userResultSet.next());
+			user.setManager(resultSet2.next());
 			resultSet2.close();
 			statement2.close();
 			userResultSet.close();

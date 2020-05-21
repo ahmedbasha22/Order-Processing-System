@@ -78,9 +78,6 @@ public class JasperReports {
 			/* Using jasperReport object to generate PDF */
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 
-			/* call jasper engine to display report in jasperviewer window */
-			JasperViewer.viewReport(jasperPrint);
-
 			/* outputStream to create PDF */
 			OutputStream outputStream = new FileOutputStream(new File(outputFile));
 

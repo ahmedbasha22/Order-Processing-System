@@ -41,6 +41,9 @@ public class ManagementController {
 		window.setScene(scene);
 		window.show();
 		
+		TableController controller = loader.getController();
+		controller.initData(user);
+		
 	}
 	
 	public void viewManageCustomers(ActionEvent event) throws IOException {

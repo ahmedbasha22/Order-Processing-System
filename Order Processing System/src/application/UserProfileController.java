@@ -51,8 +51,8 @@ public class UserProfileController {
 	Alert alert = new Alert(AlertType.ERROR);
 	Alert alert_success = new Alert(AlertType.INFORMATION);
 	
-	
 	public void initData(User user) throws SQLException {
+		m.setVisible(false);
 		driver = (DriverImp) DriverImp.getInstance();
 		this.user = user;
 		usernameEdit.setText(user.getUsername());
@@ -61,7 +61,7 @@ public class UserProfileController {
 		emailEdit.setText(user.getEmail());
 		phoneEdit.setText(user.getPhone());
 		shippingAddressEdit.setText(user.getShppingAddress());
-		if(!user.isManager()) m.setText("");
+		if(user.isManager()) m.setVisible(true);
 	}
 	
 	public void edit(ActionEvent event) {
