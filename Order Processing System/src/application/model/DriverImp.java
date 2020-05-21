@@ -339,13 +339,12 @@ public class DriverImp implements Driver {
 				statement.setInt(2, ISBN);
 				statement.executeUpdate();
 				statement.close();
-			}else {
-				PreparedStatement statement = connection
-						.prepareStatement("insert into book_order values(?,?)");
+			} else {
+				PreparedStatement statement = connection.prepareStatement("insert into book_order values(?,?)");
 				statement.setInt(1, ISBN);
 				statement.setInt(2, addedQuantity);
 				statement.executeUpdate();
-				statement.close();				
+				statement.close();
 			}
 			res.close();
 			stmt.close();
@@ -361,29 +360,20 @@ public class DriverImp implements Driver {
 
 	@Override
 	public List<Book> getOrderedBooks() throws SQLException {
-		connection.setAutoCommit(false);
-		try {
-			Map<String, Integer> quantityMap = new HashMap<>();
-			List<Book> bookList = new ArrayList<>();
-			Statement stmt = connection.createStatement();
-			ResultSet res = stmt.executeQuery("select * from book_order");
-			while (res.next()) {
-				quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("quantity"));
-				bookList.add(getBookByISBN(res.getInt("ISBN")));
-			}
-			res.close();
-			stmt.close();
-			for (Book book : bookList) {
-				book.setQuantity(Integer.toString(quantityMap.get(book.getISBN())));
-			}
-			connection.commit();
-			connection.setAutoCommit(true);
-			return bookList;
-		} catch (SQLException e) {
-			connection.rollback();
-			connection.setAutoCommit(true);
-			throw e;
+		Map<String, Integer> quantityMap = new HashMap<>();
+		List<Book> bookList = new ArrayList<>();
+		Statement stmt = connection.createStatement();
+		ResultSet res = stmt.executeQuery("select * from book_order");
+		while (res.next()) {
+			quantityMap.put(Integer.toString(res.getInt("ISBN")), res.getInt("quantity"));
+			bookList.add(getBookByISBN(res.getInt("ISBN")));
 		}
+		res.close();
+		stmt.close();
+		for (Book book : bookList) {
+			book.setQuantity(Integer.toString(quantityMap.get(book.getISBN())));
+		}
+		return bookList;
 	}
 
 	@Override
@@ -392,7 +382,7 @@ public class DriverImp implements Driver {
 		stmt.executeUpdate("delete from book_order where ISBN = " + ISBN);
 		stmt.close();
 	}
-	
+
 	@Deprecated
 	public int getMinimumQuantity(int ISBN) throws SQLException {
 		Statement stmt = connection.createStatement();
