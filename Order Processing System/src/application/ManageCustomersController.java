@@ -38,7 +38,7 @@ public class ManageCustomersController implements Initializable {
 	@FXML private TableColumn<Book, CheckBox> selected;
 	
 	Alert alert = new Alert(AlertType.ERROR);
-	Alert alert_success = new Alert(AlertType.CONFIRMATION);
+	Alert alert_success = new Alert(AlertType.INFORMATION);
 
 	public void initData(User user) {
 		this.user = user;
@@ -68,7 +68,9 @@ public class ManageCustomersController implements Initializable {
 	public ObservableList<User> getUsers() throws SQLException{
 		ObservableList<User> users = FXCollections.observableArrayList();
 		List<User> u = driver.getAllUsers();
-		users.addAll(u);
+		for(User temp : u) {
+			if(!temp.isManager()) users.add(temp); 
+		}
 		return users;
 	}
 	
@@ -85,5 +87,30 @@ public class ManageCustomersController implements Initializable {
 			
 		ShopAreaController controller = loader.getController();
 		controller.initData(user);
+	}
+	
+	public void saveChanges(ActionEvent event) {
+		String successM = "";
+		alert_success.setHeaderText("These users were promoted successfully!");
+		ObservableList<User> selectedUsers = FXCollections.observableArrayList();
+		ObservableList<User> users = tableView.getItems();
+		for(User su : users) {
+			if(su.getSelected().isSelected()) {
+				try {
+					driver.promoteUser(su.getUsername());
+					successM += (su.getFirstName() + " " + su.getLastName());
+					selectedUsers.add(su);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					alert.setHeaderText(e.getLocalizedMessage());
+					alert.showAndWait();
+					return;
+				}
+			}
+		}
+		alert_success.setContentText(successM);
+		alert_success.showAndWait();
+		users.removeAll(selectedUsers);
+		tableView.setItems(users);
 	}
 }

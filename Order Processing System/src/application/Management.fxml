@@ -44,9 +44,24 @@
                   <Font name="Corbel Light" size="20.0" />
                </font>
             </Hyperlink>
-            <Hyperlink layoutX="442.0" layoutY="73.0" text="Logout" textFill="#dd2222">
+            <Hyperlink layoutX="442.0" layoutY="73.0" onAction="#logout" text="Logout" textFill="#7c005d">
                <font>
                   <Font name="Corbel Light" size="18.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink layoutX="25.0" layoutY="398.0" onAction="#getBookSalesPreviousMonth" text="The total sales for books in the previous month" textFill="#7c005d">
+               <font>
+                  <Font name="Corbel Light" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink layoutX="26.0" layoutY="453.0" onAction="#getTop5Users" text="The top 5 customers" textFill="#7c005d">
+               <font>
+                  <Font name="Corbel Light" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink layoutX="27.0" layoutY="425.0" onAction="#getTop10SoldBooks" text="The top 10 selling books for the last three months" textFill="#7c005d">
+               <font>
+                  <Font name="Corbel Light" size="16.0" />
                </font>
             </Hyperlink>
          </children>

@@ -20,6 +20,7 @@ public class Book {
 	private final StringProperty publisherName;
 	private SimpleStringProperty minQuantity;
 	private CheckBox selected;
+	private CheckBox selectedO;
 	private SimpleStringProperty addedQ;
 	private SimpleStringProperty finalQuantity;
 	
@@ -38,6 +39,7 @@ public class Book {
 			this.authors.add(new SimpleStringProperty(author));
 		}
 		this.selected = new CheckBox();
+		this.selectedO = new CheckBox();
 		this.addedQ = new SimpleStringProperty("0");
 		finalQuantity = new SimpleStringProperty("0");
 	}
@@ -163,6 +165,14 @@ public class Book {
 	
 	public void setSelected(CheckBox cb) {
 		this.selected = cb;
+	}
+	
+	public CheckBox getSelectedO() {
+		return this.selectedO;
+	}
+	
+	public void setSelectedO(CheckBox cb) {
+		this.selectedO = cb;
 	}
 
 	public void setAddedQ(String s) {

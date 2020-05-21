@@ -192,5 +192,20 @@ public class CartController implements Initializable {
 		}
 		costLabel.setText(Double.toString(cost) + " $");
 	}
+	
+	public void checkout(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("Checkout.fxml"));
+		Parent root = loader.load();
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+			
+		CheckoutController controller = loader.getController();
+		controller.initData(user);
+	}
 
 }

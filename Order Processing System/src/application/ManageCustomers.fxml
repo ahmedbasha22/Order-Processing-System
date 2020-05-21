@@ -38,7 +38,7 @@
                   <TableColumn fx:id="selected" minWidth="0.0" prefWidth="106.39990234375" text="Promote" />
               </columns>
             </TableView>
-            <Button layoutX="397.0" layoutY="423.0" mnemonicParsing="false" style="-fx-background-color: #face1f;" text="Save changes" />
+            <Button layoutX="397.0" layoutY="423.0" mnemonicParsing="false" onAction="#saveChanges" style="-fx-background-color: #face1f;" text="Save changes" />
             <Button layoutX="376.0" layoutY="458.0" mnemonicParsing="false" onAction="#continueShopping" style="-fx-background-color: #34495E;" text="Contiue shopping" textFill="#ededed" />
          </children>
       </AnchorPane>

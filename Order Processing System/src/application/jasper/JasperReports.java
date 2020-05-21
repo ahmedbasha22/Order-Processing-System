@@ -41,15 +41,15 @@ public class JasperReports {
 	}
 
 	public void getBookSalesPreviousMonth() throws SQLException{
-		createReport(new ArrayList<Object>(driver.getBookSalesPreviousMonth()),"/src/application/jasper/res/Books Sales.jrxml" ,"Books Sales");
+		createReport(new ArrayList<Object>(driver.getBookSalesPreviousMonth()),"C:\\Users\\Ahmed\\git\\Order Processing System\\src\\application\\jasper/res/Books Sales.jrxml" ,"Books Sales");
 	}
 
 	public void getTop5Users() throws SQLException{
-		createReport(new ArrayList<Object>(driver.getTop5Users()),"/src/application/jasper/res/Top 5 Users.jrxml" ,"Top 5 Users");
+		createReport(new ArrayList<Object>(driver.getTop5Users()),"C:\\Users\\Ahmed\\git\\Order Processing System\\src\\application\\jasper/res/Top 5 Users.jrxml" ,"Top 5 Users");
 	}	
 	
 	public void getTop10SoldBooks() throws SQLException{
-		createReport(new ArrayList<Object>(driver.getTop10SoldBooks()),"/src/application/jasper/res/Top 10 Selling Books.jrxml" ,"Top 10 Selling Books");
+		createReport(new ArrayList<Object>(driver.getTop10SoldBooks()),"C:\\Users\\Ahmed\\git\\Order Processing System\\src\\application\\jasper/res/Top 10 Selling Books.jrxml" ,"Top 10 Selling Books");
 	}
 	
 	private void createReport(List<Object> data, String jasperDesignPath, String output) {

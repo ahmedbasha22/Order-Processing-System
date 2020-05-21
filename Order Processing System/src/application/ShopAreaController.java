@@ -34,7 +34,6 @@ public class ShopAreaController implements Initializable {
 	
 	private DriverImp driver;
 	private User user;
-	
 	@FXML private Label successAdd;
 	@FXML private Label successAdd1;
 	
@@ -234,6 +233,27 @@ public class ShopAreaController implements Initializable {
 		UserProfileController controller = loader.getController();
 		controller.initData(user);
 	}
+	
+	public void logout(ActionEvent event) throws IOException {
+		try {
+			driver.clearShoppingCart(user.getUsername());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			alert.setHeaderText(e.getLocalizedMessage());
+			alert.showAndWait();
+		}
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("Sample.fxml"));
+		Parent root = loader.load();
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
+		window.setScene(scene);
+		window.show();
+	}
+
 	
 }
 	

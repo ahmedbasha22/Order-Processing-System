@@ -67,7 +67,7 @@
             <Font size="15.0" />
          </font>
       </Hyperlink>
-      <Hyperlink fx:id="viewP1" layoutX="788.0" layoutY="59.0" onAction="#viewProfile" prefHeight="30.0" prefWidth="60.0" text="Logout" textFill="#dd3763">
+      <Hyperlink fx:id="viewP1" layoutX="788.0" layoutY="59.0" onAction="#logout" prefHeight="30.0" prefWidth="60.0" text="Logout" textFill="#33ffb8bc">
          <font>
             <Font size="15.0" />
          </font>

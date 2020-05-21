@@ -28,7 +28,7 @@
             <AnchorPane prefHeight="72.0" prefWidth="846.0">
                <children>
                   <Button layoutX="734.0" layoutY="14.0" mnemonicParsing="false" onAction="#removeFromChart" style="-fx-background-color: #cf0000;" text="Remove from cart" textAlignment="CENTER" textFill="#dabdbd" />
-                  <Button layoutX="245.0" layoutY="14.0" mnemonicParsing="false" prefWidth="67.0" style="-fx-background-color: #face1f;" text="Checkout" textAlignment="CENTER" textFill="#00043c" />
+                  <Button layoutX="245.0" layoutY="14.0" mnemonicParsing="false" onAction="#checkout" prefWidth="67.0" style="-fx-background-color: #face1f;" text="Checkout" textAlignment="CENTER" textFill="#00043c" />
                   <Label layoutX="7.0" layoutY="18.0" prefHeight="18.0" prefWidth="147.0" text="- Total prices of the books:" textFill="#e5e7ea" />
                   <Label fx:id="costLabel" layoutX="156.0" layoutY="19.0" prefHeight="18.0" prefWidth="74.0" textFill="#54d76c" />
                </children>

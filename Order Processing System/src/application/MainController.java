@@ -43,7 +43,7 @@ public class MainController {
 	private Validator validator = new Validator();
 	private Validator v = new Validator();
 	Alert alert = new Alert(AlertType.ERROR);
-	Alert alert_success = new Alert(AlertType.CONFIRMATION);
+	Alert alert_success = new Alert(AlertType.INFORMATION);
 	
 	public User getUser() {
 		return user;
@@ -81,7 +81,7 @@ public class MainController {
 			    return;
 			}
 
-			Scene scene = new Scene(root,775,513);
+			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());
@@ -105,7 +105,7 @@ public class MainController {
 			    return;
 			}
 
-			Scene scene = new Scene(root,775,513);
+			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			Stage window = (Stage)(((Node)event.getSource()).getScene().getWindow());

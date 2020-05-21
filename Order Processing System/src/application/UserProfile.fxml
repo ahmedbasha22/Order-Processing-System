@@ -90,7 +90,7 @@
             </Label>
             <Button fx:id="bShop" layoutX="476.0" layoutY="447.0" mnemonicParsing="false" onAction="#continueShopping" style="-fx-background-color: #34495E;" text="Continue shopping" textFill="#e5e5e5" />
             <Button fx:id="vCart" layoutX="502.0" layoutY="411.0" mnemonicParsing="false" onAction="#viewCart" style="-fx-background-color: #face1f;" text="View the cart" textFill="#161616" />
-            <Hyperlink layoutX="479.0" layoutY="50.0" onAction="#viewManagement" prefHeight="34.0" prefWidth="110.0" text="Management" textFill="#007113">
+            <Hyperlink fx:id="m" layoutX="479.0" layoutY="50.0" onAction="#viewManagement" prefHeight="34.0" prefWidth="110.0" text="Management" textFill="#007113">
                <font>
                   <Font name="Corbel Light" size="17.0" />
                </font>
